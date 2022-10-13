@@ -16,7 +16,7 @@ class SMAQApp extends StatelessWidget {
       title: 'SMAQAPP',
       theme: ThemeData(
         // Here you have to declare the general Thema Data for all the APP
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.teal,
         fontFamily: "Organo",
 
 

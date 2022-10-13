@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:smaq_blazar/classes/station.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class FloatInfo extends StatefulWidget {
+  Station station;
+  Color boxcolor;
 
-  FloatInfo();
+  FloatInfo({super.key, required this.station, required this.boxcolor});
 
   @override
   State<FloatInfo> createState() => _FloatInfoState();
@@ -13,131 +16,184 @@ class FloatInfo extends StatefulWidget {
 class _FloatInfoState extends State<FloatInfo> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(35),
-          border: Border.all(color: Colors.white,width: 4
-          ),
-          color: Colors.lightGreen.shade800,
+    return GestureDetector(
+      onTap: (){
 
-        ),
-        width: MediaQuery
-            .of(context)
-            .size
-            .width * 0.9,
-        height: 150,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Flexible(
-              flex: 2,
-              child:Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
-                  Text(
-                      "AQI",
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                    color: Colors.white)
-                  ),
 
-                  Text(
-                      "23",
-                      style: TextStyle(
-                        fontSize: 75,
-                      )
-                  ),
-                ],
-              )
+      },
+      child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.black,width: 2
             ),
-            Expanded(
-              flex: 1,
-                child:Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: Row(
+            color: widget.boxcolor,//Colors.lightGreen.shade800,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.7),
+                spreadRadius: 2,
+                blurRadius: 9,
+                //offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
 
-                        children: [
-                          Container(
-                            child: const Icon(
-                              Icons.device_thermostat_outlined,
-                              size: 30,
-                              color: Colors.white,
-
-                              )
-                            ),
-                          Container(
-                            child: const Text(
-                                "23.7ºC",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                )
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Row(
-
-                        children: [
-                          Container(
-                              child: const Icon(
-                                Icons.water_drop,
-                                size: 30,
+          ),
+          width: MediaQuery
+              .of(context)
+              .size
+              .width * 0.95,
+          height:MediaQuery
+              .of(context)
+              .size
+              .height * 0.20,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: Text(
+                              widget.station.name,
+                              style: const TextStyle(
+                                fontSize: 30,
                                 color: Colors.white,
-
                               )
                           ),
-                          Container(
-                            child: const Text(
-                                "47.6% ",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                )
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: Row(
-
-                        children: [
-                          Flexible(
-                            flex: 2,
-                            child: Container(
-                                child: const Icon(
-                                  Icons.tornado_rounded,
-                                  size: 30,
-                                  color: Colors.white,
-
-                                )
+                      /*Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: IconButton(onPressed: (){},
+                            icon: const Icon(
+                              Icons.open_in_browser_outlined,
+                              color: Colors.black,
+                              size: 30,
+                            )),
+                      )*/
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child:Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Align (
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                  "AQI",
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                color: Colors.white)
+                              ),
                             ),
-                          ),
-                          Flexible(
-                            flex:6,
-                            child: Container(
-                              child: const Text(
-                                  "1013.4mb ",
-                                  style: TextStyle(
-                                    fontSize: 20,
+
+                            Flexible(
+                              child: Text(
+                                  widget.station.AqiLevel.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 65,
                                   )
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        )
                       ),
-                    ),
-                  ],
-                )
-            )
-          ],)
+                      Expanded(
+                        flex: 1,
+                          child:Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Expanded(
+                                child: Row(
 
+                                  children: [
+                                    const Icon(
+                                      Icons.device_thermostat_outlined,
+                                      size: 20,
+                                      color: Colors.white,
+
+                                      ),
+                                    Expanded(
+                                      child: Text(
+                                          "${widget.station.temp}ºC",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          )
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+
+                                  children: [
+                                    const Icon(
+                                      Icons.water_drop,
+                                      size: 20,
+                                      color: Colors.white,
+
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                          "${widget.station.humidity}%",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          )
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+
+                                  children: [
+                                    Container(
+                                        child: const Icon(
+                                          Icons.tornado_rounded,
+                                          size: 20,
+                                          color: Colors.white,
+
+                                        )
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                          "${widget.station.pressure}mb",
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                          )
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                      )
+                    ],),
+                ),
+              ],
+            ),
+          )
+
+      ),
     );
   }
 }

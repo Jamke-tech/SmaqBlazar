@@ -37,6 +37,8 @@ dependencies:
   graphic: ^0.10.7
   syncfusion_flutter_gauges: ^20.2.50
   flutter_map_marker_cluster: any
+  location: ^4.4.0
+
 
 
 

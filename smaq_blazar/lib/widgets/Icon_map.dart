@@ -2,28 +2,30 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
-class IconMap extends StatelessWidget {
-  MaterialColor Iconcolor;
+class IconMap extends StatefulWidget {
+  Color Iconcolor;
+  final Function() setStateforMap;
 
-  IconMap({super.key, required this.Iconcolor});
+  IconMap({super.key, required this.Iconcolor, required this.setStateforMap});
 
   @override
+  State<IconMap> createState() => _IconMapState();
+}
+
+class _IconMapState extends State<IconMap> {
+  @override
   Widget build(BuildContext context) {
-    return  Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Iconcolor,
-          border: Border.all(width: 3,color: Colors.black),
+    return  GestureDetector(
+      onTap: (){
+        widget.setStateforMap();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: widget.Iconcolor,
+            border: Border.all(width: 2,color: Colors.black),
+        ),
       ),
-      child: TextButton(
-        onPressed: (){
-          print("Icon pressed and screen show");
-
-        }, child: Text("35"),
-
-      )
-
-
     );
   }
 }
