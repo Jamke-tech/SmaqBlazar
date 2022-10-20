@@ -38,10 +38,10 @@ class _FloatLegendState extends State<FloatLegend> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.zero,
-              topRight: Radius.circular(20),
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20)),
-          border: Border.all(color: Colors.black, width: 2),
+              topRight: Radius.circular(8),
+              bottomLeft: Radius.circular(8),
+              bottomRight: Radius.circular(8)),
+          border: Border.all(color: Colors.black, width: 1),
           color: Colors.grey.shade400, //Colors.lightGreen.shade800,
           boxShadow: [
             BoxShadow(
@@ -53,78 +53,279 @@ class _FloatLegendState extends State<FloatLegend> {
           ],
         ),
         width: MediaQuery.of(context).size.width * 0.95,
-        height: MediaQuery.of(context).size.height * 0.15,
-        child: Column(
-          children: [
-            Row(
+        //height: MediaQuery.of(context).size.height * 0.16,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.lightGreen.shade800,
+                            border: Border.all(width: 1, color: Colors.black),
+                          ),
+                        ),
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Column(
+                             crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("BO:  0 - 50 ",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.lightGreen.shade800,
+                                    )),
+                                Padding(
+                                  padding: const EdgeInsets.only(top:4),
+                                  child: Text( "No hi ha perill per la salut.",
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                      )),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.amber,
+                            border: Border.all(width: 1, color: Colors.black),
+                          ),
+                        ),
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("MODERAT: 51 - 100",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.amber,
+                                    )),
+                                Padding(
+                                  padding: const EdgeInsets.only(top:4),
+                                  child: Text(
+                                      "LLeu amenaça per a grups sensibles.",
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                      )),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
 
-              children: [
-                Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.green,
-                    border: Border.all(width: 2, color: Colors.black),
-                  ),
-                ),
-                Text(" BO "),
+                      ],
+                    ),
+                  )
 
-                Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.green,
-                    border: Border.all(width: 2, color: Colors.black),
-                  ),
-                ),
-                Text(" Moderat")
-              ],
-            ),
-            Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.green,
-                    border: Border.all(width: 2, color: Colors.black),
-                  ),
-                ),
-                Text(" Pobre"),
 
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.green,
-                    border: Border.all(width: 2, color: Colors.black),
-                  ),
-                ),
-                Text(" Insalubre ")
-              ],
-            ),
-            Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.green,
-                    border: Border.all(width: 2, color: Colors.black),
-                  ),
-                ),
-                Text(" Sever"),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top:4),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.orange.shade800,
+                              border: Border.all(width: 1, color: Colors.black),
+                            ),
+                          ),
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("POBRE:  101 - 200 ",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.orange.shade800,
+                                      )),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top:4),
+                                    child: Text( "LLeugeres molèsties al respirar.",
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.white,
+                                        )),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.redAccent.shade700,
+                              border: Border.all(width: 1, color: Colors.black),
+                            ),
+                          ),
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("INSALUBRE: 201 - 300",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.redAccent.shade700,
+                                      )),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top:4),
+                                    child: Text(
+                                        "Greus problemes a grups sensibles.",
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.white,
+                                        )),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
 
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.green,
-                    border: Border.all(width: 2, color: Colors.black),
-                  ),
+                        ],
+                      ),
+                    )
+
+
+                  ],
                 ),
-                Text(" Perillós")
-              ],
-            ),
-          ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.pink.shade800,
+                              border: Border.all(width: 1, color: Colors.black),
+                            ),
+                          ),
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("SEVER:  301 - 400 ",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.pink.shade800,
+                                      )),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top:4),
+                                    child: Text( "Pot causar malalties cròniques o afectacions importants.",
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.white,
+                                        )),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color(0xFF7D0023),
+                              border: Border.all(width: 1, color: Colors.black),
+                            ),
+                          ),
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("PERILLÓS: 401 - 500+",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Color(0xFF7D0023),
+                                      )),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top:4),
+                                    child: Text(
+                                        "L'exposició prolongada pot causar morts prematures.",
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.white,
+                                        )),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+
+                        ],
+                      ),
+                    )
+
+
+                  ],
+                ),
+              ),
+
+            ],
+          ),
         ));
   }
 }

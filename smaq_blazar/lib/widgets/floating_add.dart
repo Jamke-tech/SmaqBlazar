@@ -1,13 +1,17 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
+import 'package:smaq_blazar/services/Station_service.dart';
+import 'package:smaq_blazar/widgets/Icon_map.dart';
+
+import '../classes/station.dart';
+import '../classes/station_model.dart';
 
 class FloatAdd extends StatefulWidget {
+
   FloatAdd({super.key});
 
   @override
@@ -17,11 +21,17 @@ class FloatAdd extends StatefulWidget {
 class _FloatAddState extends State<FloatAdd> {
   final _formValidationKey = GlobalKey<FormState>();
   MapController mapController = MapController();
+  TextEditingController IDStation = TextEditingController();
+  TextEditingController name = TextEditingController();
+  TextEditingController Description = TextEditingController();
+  LatLng CenterLocation= LatLng(41.35581, 2.14141);
+
+
   Marker markerToDisplay = Marker(
       width: 30,
       height: 30,
       point: LatLng(41.35581, 2.14141),
-      builder: (context) => Icon(
+      builder: (context) => const Icon(
             Icons.location_on_outlined,
             color: Colors.red,
             size: 30,
@@ -30,20 +40,20 @@ class _FloatAddState extends State<FloatAdd> {
 
   @override
   Widget build(BuildContext context) {
-    Location location = new Location();
+    Location location = Location();
 
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+    LocationData locationData;
 
     return Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(8),
               topRight: Radius.zero,
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20)),
-          border: Border.all(color: Colors.black, width: 2),
+              bottomLeft: Radius.circular(8),
+              bottomRight: Radius.circular(8)),
+          border: Border.all(color: Colors.black, width: 1),
           color: Colors.grey.shade400, //Colors.lightGreen.shade800,
           boxShadow: [
             BoxShadow(
@@ -55,200 +65,268 @@ class _FloatAddState extends State<FloatAdd> {
           ],
         ),
         width: MediaQuery.of(context).size.width * 0.95,
-        height: MediaQuery.of(context).size.height * 0.50,
+        //height: MediaQuery.of(context).size.height * 0.50,
         child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(left: 8,right: 8),
             child: Form(
               key: _formValidationKey,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text("Station ID: "),
-                  Divider(
-                    color: Colors.black,
-                    height: 2,
-                    thickness: 2,
-                    indent: 10,
-                    endIndent: 10,
-                  ),
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Falta un nom vàlid';
-                      }
-                      return null;
-                    },
-                  ),
-                  Text("Station Nikname: "),
-                  Divider(
-                    color: Colors.black,
-                    height: 2,
-                    thickness: 2,
-                    indent: 10,
-                    endIndent: 10,
-                  ),
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Falta un nom vàlid';
-                      }
-                      return null;
-                    },
-                  ),
-                  /*Text("Description: "),
-                Divider(
-                  color: Colors.black,
-                  height: 2,
-                  thickness: 2,
-                  indent: 10,
-                  endIndent: 10,
-                ),
-                TextFormField(
-                  validator: (value){
-                    if(value == null || value.isEmpty){
-                      return 'Falta un nom vàlid';
-                    }
-                    return null;
-
-                  },
-                ),*/
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Location: "),
-
+                      const Text("ID estació: ",style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black)),
+                      Expanded(
+                        child: TextFormField(
+                          controller: IDStation,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Falta un nom vàlid';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
                     ],
                   ),
-                  Divider(
+                  const Divider(
+                    color: Colors.black,
+                    height: 4,
+                    thickness: 1,
+                    indent: 0,
+                    endIndent: 0,
+                  ),
+                  Row(
+                    children: [
+                      const Text("Nom: ",style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black)),
+                      Expanded(
+                        child: TextFormField(
+                          controller: name,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Falta un nom vàlid';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(
+                    color: Colors.black,
+                    height: 4,
+                    thickness: 1,
+                    indent: 0,
+                    endIndent: 0,
+                  ),
+                  Row(
+                    children: [
+                      const Text("Descripció: ",style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black)),
+                      Expanded(
+                        child: TextFormField(
+                          controller: Description,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Falta un nom vàlid';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(
+                    color: Colors.black,
+                    height: 4,
+                    thickness: 1,
+                    indent: 0,
+                    endIndent: 0,
+                  ),
+                  const Text("Localització: ",style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black)),
+
+                  /*Divider(
                     color: Colors.black,
                     height: 2,
                     thickness: 2,
                     indent: 10,
                     endIndent: 10,
-                  ),
+                  ),*/
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                     child: Container(
-                      height: 150,
-                      child: Stack(
-                        children: [
-                          FlutterMap(
-                              mapController: mapController,
-                              options: MapOptions(
-                                  center: LatLng(41.35581, 2.14141),
-                                  minZoom: 5,
-                                  zoom: 14,
-                                  plugins: [
-                                    MarkerClusterPlugin(),
-                                  ],
-                                  onLongPress: (tapPosition, latlng) {
-                                    setState(() {
-                                      markerToDisplay =
-                                          Marker(
-                                              width: 30,
-                                              height: 30,
-                                              point: latlng,
-                                              builder: (context) => Icon(
-                                                Icons.location_on_outlined,
-                                                color: Colors.red,
-                                                size: 30,
-                                              ));
-
-                                      markerTapOrLocationSet=true;
-
-                                    });
-                                  }),
-                              layers: [
-                                TileLayerOptions(
-                                  urlTemplate:
-                                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                  subdomains: ['a', 'b', 'c'],
-                                  retinaMode: true,
-                                ),
-                                MarkerLayerOptions(markers: markerTapOrLocationSet? ([ markerToDisplay] ): [] ),
-                              ]),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.grey.shade600,
-                                    fixedSize: Size(10,10),
-
-
-                                  ),
-                                  onPressed: () async {
-                                    _serviceEnabled = await location.serviceEnabled();
-                                    if (!_serviceEnabled) {
-                                      _serviceEnabled = await location.requestService();
-                                      if (!_serviceEnabled) {
-                                        return;
-                                      }
-                                    }
-                                    _permissionGranted = await location.hasPermission();
-                                    if (_permissionGranted == PermissionStatus.denied) {
-                                      _permissionGranted =
-                                      await location.requestPermission();
-                                      if (_permissionGranted !=
-                                          PermissionStatus.granted) {
-                                        return;
-                                      }
-                                    }
-                                    _locationData = await location.getLocation();
-
-
-                                    markerToDisplay =
-                                        Marker(
-                                            width: 30,
-                                            height: 30,
-                                            point: LatLng(_locationData.latitude!, _locationData.longitude!),
-                                            builder: (context) => Icon(
+                      height: 120,
+                      child: Stack(children: [
+                        FlutterMap(
+                            mapController: mapController,
+                            options: MapOptions(
+                                center: CenterLocation,//LatLng(41.35581, 2.14141),
+                                minZoom: 5,
+                                zoom: 14,
+                                plugins: [
+                                  MarkerClusterPlugin(),
+                                ],
+                                onLongPress: (tapPosition, latlng) {
+                                  setState(() {
+                                    markerToDisplay = Marker(
+                                        width: 30,
+                                        height: 30,
+                                        point: latlng,
+                                        builder: (context) => const Icon(
                                               Icons.location_on_outlined,
-                                              color: Colors.red,
-                                              size: 30,
+                                              color: Colors.black,
+                                              size: 20,
                                             ));
-                                    setState((){
-                                      markerTapOrLocationSet=true;
-                                    });
 
-                                  },
-                                  child: Icon(Icons.my_location,size: 25,
-                                    color: Colors.white,)),
-                            ),
+                                    markerTapOrLocationSet = true;
+                                    CenterLocation = LatLng(latlng.latitude, latlng.longitude);
+                                    mapController.move(CenterLocation, 15);
+                                  });
+                                }),
+                            layers: [
+                              TileLayerOptions(
+                                urlTemplate:
+                                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                subdomains: ['a', 'b', 'c'],
+                                retinaMode: true,
+                              ),
+                              MarkerLayerOptions(
+                                  markers: markerTapOrLocationSet
+                                      ? ([markerToDisplay])
+                                      : []),
+                            ]),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey.shade600,
+                                  fixedSize: Size(10, 10),
+                                ),
+                                onPressed: () async {
+                                  serviceEnabled =
+                                      await location.serviceEnabled();
+                                  if (!serviceEnabled) {
+                                    serviceEnabled =
+                                        await location.requestService();
+                                    if (!serviceEnabled) {
+                                      return;
+                                    }
+                                  }
+                                  permissionGranted =
+                                      await location.hasPermission();
+                                  if (permissionGranted ==
+                                      PermissionStatus.denied) {
+                                    permissionGranted =
+                                        await location.requestPermission();
+                                    if (permissionGranted !=
+                                        PermissionStatus.granted) {
+                                      return;
+                                    }
+                                  }
+                                  locationData = await location.getLocation();
+
+                                  markerToDisplay = Marker(
+                                      width: 30,
+                                      height: 30,
+                                      point: LatLng(locationData.latitude!,
+                                          locationData.longitude!),
+                                      builder: (context) => const Icon(
+                                            Icons.location_on_outlined,
+                                            color: Colors.black,
+                                            size: 20,
+                                          ));
+                                  setState(() {
+                                    markerTapOrLocationSet = true;
+                                    CenterLocation = LatLng(locationData.latitude!,
+                                        locationData.longitude!);
+                                    mapController.move(CenterLocation, 15);
+
+                                  });
+                                },
+                                child: const Icon(
+                                  Icons.my_location,
+                                  size: 25,
+                                  color: Colors.white,
+                                )),
                           ),
-                        ]
-                      ),
+                        ),
+                      ]),
                     ),
                   ),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey.shade600,
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         //We validate the form
                         if (_formValidationKey.currentState!.validate()) {
                           // If the form is valid, display a snackbar. In the real world,
                           // you'd often call a server or save the information in a database.
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Saving Data')),
+                            const SnackBar(content: Text('Guardadnt Dades...')),
                           );
+
+                          StationsManager stationsManager = StationsManager();
+
+                          bool isAnError =
+                              await stationsManager.insertStation(StationModel(
+                            name: name.text.toString(),
+                            IDStation: IDStation.text.toString(),
+                            Description: Description.text.toString(),
+                            lat: markerToDisplay.point.latitude,
+                            long: markerToDisplay.point.longitude,
+                          ));
+                          if (isAnError) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Error Saving Data')),
+                            );
+                            setState(() {
+
+                            });
+
+
+
+
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Station Saved on BBDD')),
+                            );
+                          }
+
                           //TODO save the data in a server
 
                         }
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.save,
-                            size: 30,
-                            color: Colors.white,),
+                        children: const [
+                          Icon(
+                            Icons.save,
+                            size: 20,
+                            color: Colors.white,
+                          ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 20),
-                            child: Text( "SAVE",
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text("Guardar estació",
                                 style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white)),
                           ),
                         ],
                       ))
