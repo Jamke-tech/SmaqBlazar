@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:smaq_blazar/classes/station.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+import '../classes/station_model.dart';
+
 class FloatInfo extends StatefulWidget {
-  Station station;
+  StationModel station;
   Color AqiColor;
   Color boxcolor;
 
@@ -53,7 +54,7 @@ class _FloatInfoState extends State<FloatInfo> {
                     children: [
                       Expanded(
                         child: FittedBox(
-                          fit: BoxFit.fitWidth,
+                          fit: BoxFit.fitHeight,
                           child: Text(widget.station.name,
                               style: const TextStyle(
                                 fontSize: 15,
@@ -63,6 +64,13 @@ class _FloatInfoState extends State<FloatInfo> {
                       ),
                     ],
                   ),
+                ),
+                const Divider(
+                  color: Colors.black,
+                  height: 8,
+                  thickness: 1,
+                  indent: 0,
+                  endIndent: 0,
                 ),
                 Expanded(
                   flex: 3,
@@ -79,7 +87,7 @@ class _FloatInfoState extends State<FloatInfo> {
                           Padding(
                             padding: const EdgeInsets.only(left: 4),
                             child:
-                            Text(widget.station.AqiLevel.toString(),
+                            Text(widget.station.getAQI().toString(),
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -95,7 +103,7 @@ class _FloatInfoState extends State<FloatInfo> {
                             size: 16,
                             color: Colors.white,
                           ),
-                          Text("${widget.station.temp}ºC",
+                          Text("${widget.station.lastData[0].Temperature.toStringAsFixed(2)}ºC",
                               style: TextStyle(
                                 fontSize: 16,
                               )),
@@ -108,7 +116,7 @@ class _FloatInfoState extends State<FloatInfo> {
                             size: 16,
                             color: Colors.white,
                           ),
-                          Text("${widget.station.humidity}%",
+                          Text("${widget.station.lastData[0].Humidity.toStringAsFixed(2)}%",
                               style: const TextStyle(
                                 fontSize: 16,
                               )),
@@ -123,7 +131,7 @@ class _FloatInfoState extends State<FloatInfo> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left:4.0),
-                            child: Text("${widget.station.pressure}mb",
+                            child: Text("${widget.station.lastData[0].Pressure.toStringAsFixed(2)}mb",
                                 style: const TextStyle(
                                   fontSize: 16,
                                 )),
@@ -133,7 +141,23 @@ class _FloatInfoState extends State<FloatInfo> {
 
                     ],
                   ),
-                )
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    //crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(widget.station.lastData[0].CreationDate,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            )),
+
+                    ],
+                  ),
+                ),
 
               ]),
             )));

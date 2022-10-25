@@ -4,14 +4,11 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
-import 'package:smaq_blazar/services/Station_service.dart';
-import 'package:smaq_blazar/widgets/Icon_map.dart';
-
-import '../classes/station.dart';
+import '../classes/data_model.dart';
 import '../classes/station_model.dart';
+import '../services/Station_service.dart';
 
 class FloatAdd extends StatefulWidget {
-
   FloatAdd({super.key});
 
   @override
@@ -24,8 +21,7 @@ class _FloatAddState extends State<FloatAdd> {
   TextEditingController IDStation = TextEditingController();
   TextEditingController name = TextEditingController();
   TextEditingController Description = TextEditingController();
-  LatLng CenterLocation= LatLng(41.35581, 2.14141);
-
+  LatLng CenterLocation = LatLng(41.35581, 2.14141);
 
   Marker markerToDisplay = Marker(
       width: 30,
@@ -67,7 +63,7 @@ class _FloatAddState extends State<FloatAdd> {
         width: MediaQuery.of(context).size.width * 0.95,
         //height: MediaQuery.of(context).size.height * 0.50,
         child: Padding(
-            padding: const EdgeInsets.only(left: 8,right: 8),
+            padding: const EdgeInsets.only(left: 8, right: 8),
             child: Form(
               key: _formValidationKey,
               child: Column(
@@ -75,10 +71,11 @@ class _FloatAddState extends State<FloatAdd> {
                 children: [
                   Row(
                     children: [
-                      const Text("ID estació: ",style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black)),
+                      const Text("ID estació: ",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
                       Expanded(
                         child: TextFormField(
                           controller: IDStation,
@@ -101,10 +98,11 @@ class _FloatAddState extends State<FloatAdd> {
                   ),
                   Row(
                     children: [
-                      const Text("Nom: ",style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black)),
+                      const Text("Nom: ",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
                       Expanded(
                         child: TextFormField(
                           controller: name,
@@ -127,10 +125,11 @@ class _FloatAddState extends State<FloatAdd> {
                   ),
                   Row(
                     children: [
-                      const Text("Descripció: ",style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black)),
+                      const Text("Descripció: ",
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
                       Expanded(
                         child: TextFormField(
                           controller: Description,
@@ -151,10 +150,11 @@ class _FloatAddState extends State<FloatAdd> {
                     indent: 0,
                     endIndent: 0,
                   ),
-                  const Text("Localització: ",style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black)),
+                  const Text("Localització: ",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black)),
 
                   /*Divider(
                     color: Colors.black,
@@ -171,7 +171,8 @@ class _FloatAddState extends State<FloatAdd> {
                         FlutterMap(
                             mapController: mapController,
                             options: MapOptions(
-                                center: CenterLocation,//LatLng(41.35581, 2.14141),
+                                center: CenterLocation,
+                                //LatLng(41.35581, 2.14141),
                                 minZoom: 5,
                                 zoom: 14,
                                 plugins: [
@@ -190,7 +191,8 @@ class _FloatAddState extends State<FloatAdd> {
                                             ));
 
                                     markerTapOrLocationSet = true;
-                                    CenterLocation = LatLng(latlng.latitude, latlng.longitude);
+                                    CenterLocation = LatLng(
+                                        latlng.latitude, latlng.longitude);
                                     mapController.move(CenterLocation, 15);
                                   });
                                 }),
@@ -250,10 +252,10 @@ class _FloatAddState extends State<FloatAdd> {
                                           ));
                                   setState(() {
                                     markerTapOrLocationSet = true;
-                                    CenterLocation = LatLng(locationData.latitude!,
+                                    CenterLocation = LatLng(
+                                        locationData.latitude!,
                                         locationData.longitude!);
                                     mapController.move(CenterLocation, 15);
-
                                   });
                                 },
                                 child: const Icon(
@@ -288,19 +290,15 @@ class _FloatAddState extends State<FloatAdd> {
                             Description: Description.text.toString(),
                             lat: markerToDisplay.point.latitude,
                             long: markerToDisplay.point.longitude,
+                            lastData: [],
+                            lastAQI: [],
                           ));
                           if (isAnError) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text('Error Saving Data')),
                             );
-                            setState(() {
-
-                            });
-
-
-
-
+                            setState(() {});
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

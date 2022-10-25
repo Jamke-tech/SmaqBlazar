@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:smaq_blazar/classes/station.dart';
-import 'package:smaq_blazar/widgets/Icon_map.dart';
-import 'package:smaq_blazar/widgets/floating_legend.dart';
 
 import '../widgets/floating_add.dart';
 import '../widgets/floating_info.dart';
+import '../widgets/floating_legend.dart';
 
 class DetailStation extends StatefulWidget {
 

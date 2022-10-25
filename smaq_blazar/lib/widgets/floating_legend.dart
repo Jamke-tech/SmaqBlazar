@@ -168,7 +168,7 @@ class _FloatLegendState extends State<FloatLegend> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("POBRE:  101 - 200 ",
+                                  Text("POBRE:  101 - 150 ",
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.orange.shade800,
@@ -207,7 +207,7 @@ class _FloatLegendState extends State<FloatLegend> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("INSALUBRE: 201 - 300",
+                                  Text("INSALUBRE: 151 - 200",
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.redAccent.shade700,
@@ -257,7 +257,7 @@ class _FloatLegendState extends State<FloatLegend> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("SEVER:  301 - 400 ",
+                                  Text("SEVER:  201 - 300 ",
                                       style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.pink.shade800,
@@ -296,7 +296,7 @@ class _FloatLegendState extends State<FloatLegend> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("PERILLÓS: 401 - 500+",
+                                  Text("PERILLÓS: 300+",
                                       style: TextStyle(
                                         fontSize: 15,
                                         color: Color(0xFF7D0023),

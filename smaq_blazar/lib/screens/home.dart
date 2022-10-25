@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:smaq_blazar/classes/station.dart';
-import 'package:smaq_blazar/classes/station_model.dart';
-import 'package:smaq_blazar/widgets/Icon_map.dart';
-import 'package:smaq_blazar/widgets/floating_legend.dart';
 
+import '../classes/data_model.dart';
+import '../classes/station_model.dart';
 import '../services/Station_service.dart';
+import '../widgets/Icon_map.dart';
 import '../widgets/floating_add.dart';
 import '../widgets/floating_info.dart';
 import 'package:location/location.dart';
+
+import '../widgets/floating_legend.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -26,63 +27,74 @@ class _HomeState extends State<Home> {
   int _counter = 0;
 
   bool satellite = false;
-  late Station stationShown = Station("AAD234","","","null", 0, 0, 0, 0, 0, 0);
+  late StationModel stationShown =
+  StationModel(
+      name: "ERROR",
+      IDStation: "ERROR",
+      Description: "ERROR",
+      lat: 0,
+      long: 0,
+      lastData: [],
+  lastAQI: []);
   Color boxColor = Colors.lightGreen.shade800;
   Color AqiColor = Colors.lightGreen.shade800;
   bool addingStation = false;
   bool showingInfo = false;
   bool showingLegend = false;
 
-  List<Station> StationList = [
-    Station("AAD234","","","FOC Wallbox Office", 41.35581, 2.14141, 223, 25.6, 48.7, 1015.2),
-    Station("AAD256","","","Castell de Montjüic", 41.364879, 2.148868, 15, 25.4, 49, 1014.2),
-    Station("AAD523","","","D26 Wallbox Factory", 41.32723, 2.12849, 110, 27, 52.6, 1015.7),
-    Station("AAD598","","","Plaça Espanya", 41.37505, 2.14922, 172, 28, 51.5, 1013.8)
-  ];
+  /*List<StationModel> StationList = [
+    Station("AAD234", "", "", "FOC Wallbox Office", 41.35581, 2.14141, 223,
+        25.6, 48.7, 1015.2),
+    Station("AAD256", "", "", "Castell de Montjüic", 41.364879, 2.148868, 15,
+        25.4, 49, 1014.2),
+    Station("AAD523", "", "", "D26 Wallbox Factory", 41.32723, 2.12849, 110, 27,
+        52.6, 1015.7),
+    Station("AAD598", "", "", "Plaça Espanya", 41.37505, 2.14922, 172, 28, 51.5,
+        1013.8)
+  ];*/
+
+  List<StationModel> StationList =[];
 
   List<Marker> markersList = [];
-
 
   @override
   void initState(){
     //Here we have to check location an consult infromation from BBDD
-    checkAndGetLocation();
+    //checkAndGetLocation();
 
-
-
+    //We have to extract the data from the StationsList
+    StationsManager stationsManager =
+    StationsManager();
+    StationList = stationsManager.listOfStations;
     super.initState();
+
   }
   void checkAndGetLocation() async {
-    serviceEnabled =
-        await userLocation.serviceEnabled();
+    serviceEnabled = await userLocation.serviceEnabled();
     if (!serviceEnabled) {
-      serviceEnabled =
-          await userLocation.requestService();
+      serviceEnabled = await userLocation.requestService();
       if (!serviceEnabled) {
         return;
       }
     }
-    permissionGranted =
-        await userLocation.hasPermission();
-    if (permissionGranted ==
-        PermissionStatus.denied) {
-      permissionGranted =
-          await userLocation.requestPermission();
-      if (permissionGranted !=
-          PermissionStatus.granted) {
+    permissionGranted = await userLocation.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await userLocation.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
     locationData = await userLocation.getLocation();
   }
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
-    for (Station station in StationList) {
+    int i = 0;
+    markersList = [];
+    for (StationModel station in StationList) {
+      i++;
+      print(station.lat);
+      print(station.long);
       markersList.add(
         Marker(
             point: LatLng(station.lat, station.long),
@@ -91,7 +103,7 @@ class _HomeState extends State<Home> {
             rotate: true,
             builder: (context) {
               //We have to set the color of the box
-              int AqiLevel = station.AqiLevel;
+              int AqiLevel = station.getAQI();
               Color colorSelected = Color(0xFF7D0023);
 
               if (AqiLevel <= 50) {
@@ -121,23 +133,21 @@ class _HomeState extends State<Home> {
               );
             }),
       );
+      print("marker ${i}");
     }
 
     return Scaffold(
-      body: Stack(
-        clipBehavior: Clip.hardEdge,
-
-        fit: StackFit.expand,
-          children: [
+      body: Stack(clipBehavior: Clip.hardEdge, fit: StackFit.expand, children: [
         Center(
           child: Container(
-            height: MediaQuery.of(context).size.height ,
+            height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: FlutterMap(
                 options: MapOptions(
-                    center: LatLng(41.35581, 2.14141),
-                    minZoom: 5,
+                    center: LatLng(41.5901, 2.3155),
+                    minZoom: 2,
                     zoom: 14,
+                    maxZoom: 20,
                     plugins: [
                       MarkerClusterPlugin(),
                     ]),
@@ -232,11 +242,10 @@ class _HomeState extends State<Home> {
                                 }
                               },
                               icon: Icon(
-                                showingLegend
-                                    ? Icons.close_outlined
-                                    : Icons.info_outline_rounded,
-                                size: 30
-                              )),
+                                  showingLegend
+                                      ? Icons.close_outlined
+                                      : Icons.info_outline_rounded,
+                                  size: 30)),
                           IconButton(
                               onPressed: () {
                                 if (!showingInfo) {
@@ -263,25 +272,31 @@ class _HomeState extends State<Home> {
                                       ? Colors.grey.shade400
                                       : Colors.black)),
                           IconButton(
-                              onPressed: () async{
+                              onPressed: () async {
                                 if (!showingInfo) {
                                   //We have to refresh the information from the BBDD that we have
-                                  StationsManager stationsManager = StationsManager();
+                                  StationsManager stationsManager =
+                                      StationsManager();
+                                                       List<StationModel> listStations =
+                                      await stationsManager
+                                          .getAllStationsWithLastData();
 
-                                  List<StationModel> listStations = await stationsManager.getAllStation();
-                                  if (listStations.isEmpty){
+                                  if (listStations.isEmpty) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Error Getting Data')),
+                                      const SnackBar(
+                                          content: Text('Error Getting Data')),
                                     );
-                                  }else{
-                                    print(listStations.length);
-                                    print(listStations[0].name);
-
+                                  } else {
+                                    setState(() {
+                                      StationList = listStations;
+                                      stationsManager.SaveStations(StationList);
+                                    });
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text('Information on display refreshed')),
+                                      const SnackBar(
+                                          content: Text(
+                                              'Information on display refreshed')),
                                     );
                                   }
-
                                 }
                               },
                               icon: Icon(Icons.refresh_outlined,
@@ -335,13 +350,12 @@ class _HomeState extends State<Home> {
             padding: const EdgeInsets.only(bottom: 16),
             child: showingInfo && !showingLegend
                 ? Container()
-                : (stationShown.name == "null"
+                : (stationShown.name == "ERROR"
                     ? Container()
                     : FloatInfo(
                         station: stationShown,
-                        boxcolor: Colors.grey.shade400,
-                        AqiColor: AqiColor
-                      )),
+                        boxcolor: Colors.blueGrey.shade200,
+                        AqiColor: AqiColor)),
           ),
         ),
         SafeArea(
@@ -355,17 +369,17 @@ class _HomeState extends State<Home> {
             ),
           ),
         ),
-            SafeArea(
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      width: 130,
-                      child: Image.asset("assets/pictures/marca_eetac_nova.png")),
-                ),
-              ),
+        SafeArea(
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  width: 130,
+                  child: Image.asset("assets/pictures/marca_eetac_nova.png")),
             ),
+          ),
+        ),
       ]),
     );
   }
