@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 import '../classes/station_model.dart';
+import '../screens/detail_station.dart';
 
 class FloatInfo extends StatefulWidget {
   StationModel station;
@@ -25,6 +27,10 @@ class _FloatInfoState extends State<FloatInfo> {
     return GestureDetector(
         onTap: () {
           //We have to show the full info for this station
+          Navigator.pushNamed(context,'/detail_station',
+          arguments: widget.station );
+
+
 
         },
         child: Container(
@@ -103,7 +109,7 @@ class _FloatInfoState extends State<FloatInfo> {
                             size: 16,
                             color: Colors.white,
                           ),
-                          Text("${widget.station.lastData[0].Temperature.toStringAsFixed(2)}ºC",
+                          Text( widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Temperature.toStringAsFixed(2)}ºC": "ERROR",
                               style: TextStyle(
                                 fontSize: 16,
                               )),
@@ -112,11 +118,11 @@ class _FloatInfoState extends State<FloatInfo> {
                       Row(
                         children: [
                           const Icon(
-                            Icons.water_drop,
+                            WeatherIcons.humidity,
                             size: 16,
                             color: Colors.white,
                           ),
-                          Text("${widget.station.lastData[0].Humidity.toStringAsFixed(2)}%",
+                          Text(widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Humidity.toStringAsFixed(2)}ºC": "ERROR",
                               style: const TextStyle(
                                 fontSize: 16,
                               )),
@@ -131,7 +137,7 @@ class _FloatInfoState extends State<FloatInfo> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left:4.0),
-                            child: Text("${widget.station.lastData[0].Pressure.toStringAsFixed(2)}mb",
+                            child: Text(widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Pressure.toStringAsFixed(2)}ºC": "ERROR",
                                 style: const TextStyle(
                                   fontSize: 16,
                                 )),
@@ -148,7 +154,7 @@ class _FloatInfoState extends State<FloatInfo> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     //crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(widget.station.lastData[0].CreationDate,
+                      Text(widget.station.lastData.isNotEmpty ? widget.station.lastData[0].CreationDate: "NO DATA AVAILABLE FOR THIS STATION",
                             style: const TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,

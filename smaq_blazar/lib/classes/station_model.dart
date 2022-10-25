@@ -1,5 +1,7 @@
 import 'dart:ffi';
 
+import 'package:flutter/material.dart';
+
 import 'data_model.dart';
 
 class StationModel {
@@ -14,6 +16,7 @@ class StationModel {
   List<DataStation> lastData;
   List<int> lastAQI;
 
+
   StationModel(
       {required this.name,
       required this.IDStation,
@@ -23,57 +26,129 @@ class StationModel {
       required this.lastData,
       required this.lastAQI});
 
-  int getAQI(){
+  int getAQI() {
+    if(lastAQI.isNotEmpty) {
+      print(lastAQI);
+      int AQI = lastAQI[0];
 
-    List<int> sortList = lastAQI;
+      for(int i=1; i<lastAQI.length;i++){
+        if(AQI<lastAQI[i]){
+          AQI = lastAQI[i];
+        }
+      }
+      print(AQI);
+      return AQI;
+    }
+    return -1;
+  }
+  Color colorAQI (int AqiLevel){
+    print("Selecting color for: ${AqiLevel}");
 
-    sortList.sort((a,b){
-      return a.compareTo(b);
+    Color colorSelected = Color(0xFF7D0023);
+    if (AqiLevel <= 50) {
+      colorSelected = Colors.lightGreen.shade800;
+    } else if (AqiLevel > 50 && AqiLevel <= 100) {
+      colorSelected = Colors.amber;
+    } else if (AqiLevel > 100 && AqiLevel <= 150) {
+      colorSelected = Colors.orange.shade800;
+    } else if (AqiLevel > 150 && AqiLevel <= 200) {
+      colorSelected = Colors.redAccent.shade700;
+    } else if (AqiLevel > 200 && AqiLevel <= 300) {
+      colorSelected = Colors.pink.shade800;
+    } else {
+      colorSelected = Color(0xFF7D0023);
+    }
 
-    });
-    return sortList[sortList.length-1];
+    return colorSelected;
+  }
+  String textAQI (int AqiLevel){
+    print("Selecting color for: ${AqiLevel}");
+
+    String Aqitext = "No hi ha perill per la salut.";
+    if (AqiLevel <= 50) {
+      Aqitext = "No hi ha perill per la salut.";
+    } else if (AqiLevel > 50 && AqiLevel <= 100) {
+      Aqitext = "LLeu amenaça per a grups sensibles.";
+    } else if (AqiLevel > 100 && AqiLevel <= 150) {
+      Aqitext = "LLeugeres molèsties al respirar.";
+    }
+    else if (AqiLevel > 150 && AqiLevel <= 200) {
+      Aqitext = "Greus problemes a grups sensibles.";
+    } else if (AqiLevel > 200 && AqiLevel <= 300) {
+      Aqitext = "Pot causar malalties cròniques o afectacions importants.";
+    } else {
+      Aqitext = "L'exposició prolongada pot causar morts prematures.";
+    }
+
+    return Aqitext;
   }
 
+  List<dynamic> colorUV (int UVLevel){
+    print("Selecting color for: ${UVLevel}");
 
+    Color colorSelected = Color(0xFF7D0023);
+    String textSelected = "Nivell baix";
+    if (UVLevel <= 2) {
+      colorSelected = Colors.lightGreen.shade800;
+      textSelected="Nivell baix";
+    } else if (UVLevel > 2 && UVLevel <= 5) {
+      colorSelected = Colors.amber;
+      textSelected="Nivell mitjà";
+    } else if (UVLevel > 5 && UVLevel <= 7) {
+      colorSelected = Colors.orange.shade800;
+      textSelected="Nivell alt";
+    } else if (UVLevel > 7 && UVLevel <= 10) {
+      colorSelected = Colors.redAccent.shade700;
+      textSelected="Nivell molt alt";
+    } else {
+      colorSelected = Colors.pink.shade800;
+      textSelected="Nivell extrem";
+    }
+    return [colorSelected,textSelected];
+
+  }
 
   void computeAQI() {
     List<double> CxAverage =
         getAverageCxFromData(); // In order : 03 (8h) / PM25 (3h)  / PM10 (3h) / CO (8h) / SO2 (1h) / NO2 (1h)
     List<int> AQIFinal = []; // In order : 03 / PM25 / PM10 / CO / SO2 / NO2
+    if (CxAverage.isNotEmpty) {
+      //Computing AQI level from O3
+      if (CxAverage[0] < 0.2) {
+        List<double> limitsO38 = getLimitsO38(CxAverage[0]);
+        AQIFinal.add(computeAqiFromLimits(limitsO38, CxAverage[0]));
+      } else {
+        List<double> limitsO3 = getLimitsO3(CxAverage[0]);
+        AQIFinal.add(computeAqiFromLimits(limitsO3, CxAverage[0]));
+      }
 
-    //Computing AQI level from O3
-    if (CxAverage[0] < 0.2) {
-      List<double> limitsO38 = getLimitsO38(CxAverage[0]);
-      AQIFinal.add(computeAqiFromLimits(limitsO38, CxAverage[0]));
-    } else {
-      List<double> limitsO3 = getLimitsO3(CxAverage[0]);
-      AQIFinal.add(computeAqiFromLimits(limitsO3, CxAverage[0]));
+      //Computing AQI level from PM25
+      List<double> limitsPM25 = getLimitsPM25(CxAverage[1]);
+      AQIFinal.add(computeAqiFromLimits(limitsPM25, CxAverage[1]));
+
+      //Computing AQI level from PM10
+      List<double> limitsPM10 = getLimitsPM10(CxAverage[2]);
+      AQIFinal.add(computeAqiFromLimits(limitsPM10, CxAverage[2]));
+
+      //Computing AQI level from CO
+      List<double> limitsCO = getLimitsPM10(CxAverage[3]);
+      AQIFinal.add(computeAqiFromLimits(limitsCO, CxAverage[3]));
+
+      //Computing AQI level from SO2
+      List<double> limitsSO2 = getLimitsSO2(CxAverage[4]);
+      AQIFinal.add(computeAqiFromLimits(limitsSO2, CxAverage[4]));
+
+      //Computing AQI level from PM10
+      List<double> limitsNO2 = getLimitsNO2(CxAverage[5]);
+      AQIFinal.add(computeAqiFromLimits(limitsNO2, CxAverage[5]));
+
+      print(AQIFinal);
+
+      lastAQI = AQIFinal;
     }
-
-    //Computing AQI level from PM25
-    List<double> limitsPM25 = getLimitsPM25(CxAverage[1]);
-    AQIFinal.add(computeAqiFromLimits(limitsPM25, CxAverage[1]));
-
-    //Computing AQI level from PM10
-    List<double> limitsPM10 = getLimitsPM10(CxAverage[2]);
-    AQIFinal.add(computeAqiFromLimits(limitsPM10, CxAverage[2]));
-
-    //Computing AQI level from CO
-    List<double> limitsCO = getLimitsPM10(CxAverage[3]);
-    AQIFinal.add(computeAqiFromLimits(limitsCO, CxAverage[3]));
-
-    //Computing AQI level from SO2
-    List<double> limitsSO2 = getLimitsSO2(CxAverage[4]);
-    AQIFinal.add(computeAqiFromLimits(limitsSO2, CxAverage[4]));
-
-    //Computing AQI level from PM10
-    List<double> limitsNO2 = getLimitsNO2(CxAverage[5]);
-    AQIFinal.add(computeAqiFromLimits(limitsNO2, CxAverage[5]));
-
-    print(lastAQI);
-
-    lastAQI = AQIFinal;
-
+    else{
+      lastAQI=[];
+    }
   }
 
   int computeAqiFromLimits(List<double> limits, double Cx) {
@@ -85,88 +160,94 @@ class StationModel {
   }
 
   List<double> getAverageCxFromData() {
-    DateTime lastDataTime = DateTime.parse(lastData[0].CreationDate);
+    if (lastData.isNotEmpty) {
+      DateTime lastDataTime =
+          DateTime.parse(lastData[0].CreationDate.replaceAll("/", "-"));
 
-    //We have to do the average for 1h pollutants
-    DateTime actualDataTime = lastDataTime;
-    int values1H = 0;
-    double sumO3 = 0;
-    double sumSO2 = 0;
-    double sumNO2 = 0;
-    int vectorPosition = 0;
+      //We have to do the average for 1h pollutants
+      DateTime actualDataTime = lastDataTime;
+      int values1H = 0;
+      double sumO3 = 0;
+      double sumSO2 = 0;
+      double sumNO2 = 0;
+      int vectorPosition = 0;
 
-    while (lastDataTime.difference(actualDataTime).inHours < 1) {
-      //Mentre la diferencia sigui menor a 1h ho afegim a la suma
+      while (lastDataTime.difference(actualDataTime).inHours < 1) {
+        //Mentre la diferencia sigui menor a 1h ho afegim a la suma
 
-      sumO3 = sumO3 + lastData[vectorPosition].CxO3;
-      sumSO2 = sumSO2 + lastData[vectorPosition].CxSO2;
-      sumNO2 = sumNO2 + lastData[vectorPosition].CxNO2;
+        sumO3 = sumO3 + lastData[vectorPosition].CxO3;
+        sumSO2 = sumSO2 + lastData[vectorPosition].CxSO2;
+        sumNO2 = sumNO2 + lastData[vectorPosition].CxNO2;
 
-      //Next value
-      actualDataTime =
-          DateTime.parse(lastData[vectorPosition + 1].CreationDate);
-      values1H++;
-      vectorPosition++;
-    }
+        //Next value
+        actualDataTime = DateTime.parse(
+            lastData[vectorPosition + 1].CreationDate.replaceAll("/", "-"));
+        values1H++;
+        vectorPosition++;
+      }
 
-    //We compute the 8h average pollutants
-    actualDataTime = lastDataTime;
-    int values8H = 0;
-    double sumO38 = 0;
-    double sumCO = 0;
+      //We compute the 8h average pollutants
+      actualDataTime = lastDataTime;
+      int values8H = 0;
+      double sumO38 = 0;
+      double sumCO = 0;
 
-    vectorPosition = 0;
+      vectorPosition = 0;
 
-    while (lastDataTime.difference(actualDataTime).inHours < 8) {
-      //Mentre la diferencia sigui menor a 1h ho afegim a la suma
+      while (lastDataTime.difference(actualDataTime).inHours < 8) {
+        //Mentre la diferencia sigui menor a 1h ho afegim a la suma
 
-      sumO38 = sumO38 + lastData[vectorPosition].CxO3;
-      sumCO = sumCO + lastData[vectorPosition].CxCO;
+        sumO38 = sumO38 + lastData[vectorPosition].CxO3;
+        sumCO = sumCO + lastData[vectorPosition].CxCO;
 
-      //Next value
-      actualDataTime =
-          DateTime.parse(lastData[vectorPosition + 1].CreationDate);
-      values8H++;
-      vectorPosition++;
-    }
+        //Next value
+        actualDataTime = DateTime.parse(
+            lastData[vectorPosition + 1].CreationDate.replaceAll("/", "-"));
+        values8H++;
+        vectorPosition++;
+      }
 
-    //We will use the NowCast aproximation where the PM are comuted with 3H average
-    //We compute the 3h average pollutants
-    actualDataTime = lastDataTime;
-    int values3H = 0;
-    double sumPM25 = 0;
-    double sumPM10 = 0;
+      //We will use the NowCast aproximation where the PM are comuted with 3H average
+      //We compute the 3h average pollutants
+      actualDataTime = lastDataTime;
+      int values3H = 0;
+      double sumPM25 = 0;
+      double sumPM10 = 0;
 
-    vectorPosition = 0;
+      vectorPosition = 0;
 
-    while (lastDataTime.difference(actualDataTime).inHours < 3) {
-      //Mentre la diferencia sigui menor a 1h ho afegim a la suma
+      while (lastDataTime.difference(actualDataTime).inHours < 3) {
+        //Mentre la diferencia sigui menor a 1h ho afegim a la suma
 
-      sumPM25 = sumPM25 + lastData[vectorPosition].PM25;
-      sumPM10 = sumPM10 + lastData[vectorPosition].PM10;
+        sumPM25 = sumPM25 + lastData[vectorPosition].PM25;
+        sumPM10 = sumPM10 + lastData[vectorPosition].PM10;
 
-      //Next value
-      actualDataTime =
-          DateTime.parse(lastData[vectorPosition + 1].CreationDate);
-      values3H++;
-      vectorPosition++;
-    }
+        //Next value
+        actualDataTime = DateTime.parse(
+            lastData[vectorPosition + 1].CreationDate.replaceAll("/", "-"));
+        values3H++;
+        vectorPosition++;
+      }
 
-    List<double> listReturn = [];
+      List<double> listReturn = [];
 
-    double CXO38 = (sumO38 / values8H);
-    double CX03 = (sumO3 / values1H);
-    if (CX03 > 0.2) {
-      listReturn.add(CXO38);
+      double CXO38 = (sumO38 / values8H);
+      double CX03 = (sumO3 / values1H);
+      if (CX03 > 0.2) {
+        listReturn.add(CXO38);
+      } else {
+        listReturn.add(CX03);
+      }
+      listReturn.add((sumPM25 / values3H));
+      listReturn.add((sumPM10 / values3H));
+      listReturn.add((sumCO / values8H));
+      listReturn.add((sumSO2 / values1H));
+      listReturn.add((sumNO2 / values1H));
+
+      return listReturn;
     } else {
-      listReturn.add(CX03);
+      return [];
     }
-    listReturn.add((sumPM25 / values3H));
-    listReturn.add((sumPM10 / values3H));
-    listReturn.add((sumCO / values8H));
-    listReturn.add((sumSO2 / values1H));
-    listReturn.add((sumNO2 / values1H));
-    return listReturn;
   }
 
   List<double> getLimitsPM25(double Cx) {

@@ -1,12 +1,12 @@
-import 'dart:io';
-
 import 'package:http/http.dart' as http;
+import 'package:location_platform_interface/location_platform_interface.dart';
 import 'dart:convert';
 
 import '../api/endpoints.dart';
 import '../classes/data_model.dart';
 import '../classes/station_model.dart';
 import 'Data_service.dart';
+import 'package:location/location.dart';
 
 class StationsManager {
   static final StationsManager _instance = StationsManager._internal();
@@ -23,6 +23,7 @@ class StationsManager {
   Endpoints endpoints = Endpoints();
 
   List<StationModel> listOfStations= [];
+  late LocationData locationUser;
 
 
   Future<void> SaveStations(List<StationModel> stations) async {
@@ -114,6 +115,7 @@ class StationsManager {
               lastData: dataForThatStation,lastAQI:[]);
 
           stationModel.computeAQI();
+          print(stationModel.lastAQI);
 
           stationsReturn.add(stationModel);
         }
@@ -127,5 +129,9 @@ class StationsManager {
       print(error);
       return [];
     }
+  }
+
+  saveLocation(LocationData locationData) {
+    locationUser=locationData;
   }
 }

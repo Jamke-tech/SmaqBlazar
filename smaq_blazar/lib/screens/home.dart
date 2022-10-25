@@ -19,11 +19,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Location userLocation = Location();
 
-  late bool serviceEnabled;
-  late PermissionStatus permissionGranted;
-  late LocationData locationData;
+ late LocationData locationData;
+
   int _counter = 0;
 
   bool satellite = false;
@@ -66,26 +64,11 @@ class _HomeState extends State<Home> {
     StationsManager stationsManager =
     StationsManager();
     StationList = stationsManager.listOfStations;
+    //locationData= stationsManager.locationUser;
     super.initState();
 
   }
-  void checkAndGetLocation() async {
-    serviceEnabled = await userLocation.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await userLocation.requestService();
-      if (!serviceEnabled) {
-        return;
-      }
-    }
-    permissionGranted = await userLocation.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await userLocation.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-    locationData = await userLocation.getLocation();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,21 +87,7 @@ class _HomeState extends State<Home> {
             builder: (context) {
               //We have to set the color of the box
               int AqiLevel = station.getAQI();
-              Color colorSelected = Color(0xFF7D0023);
-
-              if (AqiLevel <= 50) {
-                colorSelected = Colors.lightGreen.shade800;
-              } else if (AqiLevel > 50 && AqiLevel <= 100) {
-                colorSelected = Colors.amber;
-              } else if (AqiLevel > 100 && AqiLevel <= 150) {
-                colorSelected = Colors.orange.shade800;
-              } else if (AqiLevel > 150 && AqiLevel <= 200) {
-                colorSelected = Colors.redAccent.shade700;
-              } else if (AqiLevel > 200 && AqiLevel <= 300) {
-                colorSelected = Colors.pink.shade800;
-              } else {
-                colorSelected = Color(0xFF7D0023);
-              }
+              Color colorSelected = station.colorAQI(AqiLevel);
 
               return IconMap(
                 Iconcolor: colorSelected,
@@ -136,6 +105,7 @@ class _HomeState extends State<Home> {
       print("marker ${i}");
     }
 
+
     return Scaffold(
       body: Stack(clipBehavior: Clip.hardEdge, fit: StackFit.expand, children: [
         Center(
@@ -144,7 +114,7 @@ class _HomeState extends State<Home> {
             width: MediaQuery.of(context).size.width,
             child: FlutterMap(
                 options: MapOptions(
-                    center: LatLng(41.5901, 2.3155),
+                    center: LatLng(markersList[0].point.latitude,markersList[0].point.longitude),
                     minZoom: 2,
                     zoom: 14,
                     maxZoom: 20,
@@ -208,7 +178,7 @@ class _HomeState extends State<Home> {
                                   bottomRight: Radius.zero)))
                           : BorderRadius.circular(8),
                       border: Border.all(color: Colors.black, width: 1),
-                      color: Color(0xFFc8c8c7), //Colors.grey.shade400,
+                      color: Colors.blueGrey.shade200, //Colors.grey.shade400,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.7),
@@ -227,7 +197,7 @@ class _HomeState extends State<Home> {
                         children: [
                           IconButton(
                               color: (showingInfo && addingStation)
-                                  ? Colors.grey.shade400
+                                  ? Colors.grey.shade600
                                   : Colors.black,
                               onPressed: () {
                                 if (!addingStation) {
@@ -260,7 +230,7 @@ class _HomeState extends State<Home> {
                                       : Icons.satellite_rounded,
                                   size: 30,
                                   color: showingInfo
-                                      ? Colors.grey.shade400
+                                      ? Colors.grey.shade600
                                       : Colors.black)),
                           IconButton(
                               onPressed: () {
@@ -269,7 +239,7 @@ class _HomeState extends State<Home> {
                               icon: Icon(Icons.filter_alt_rounded,
                                   size: 30,
                                   color: showingInfo
-                                      ? Colors.grey.shade400
+                                      ? Colors.grey.shade600
                                       : Colors.black)),
                           IconButton(
                               onPressed: () async {
@@ -302,7 +272,7 @@ class _HomeState extends State<Home> {
                               icon: Icon(Icons.refresh_outlined,
                                   size: 30,
                                   color: showingInfo
-                                      ? Colors.grey.shade400
+                                      ? Colors.grey.shade600
                                       : Colors.black)),
                           IconButton(
                               onPressed: () {
@@ -323,7 +293,7 @@ class _HomeState extends State<Home> {
                                       : Icons.add_box_outlined,
                                   size: 30,
                                   color: (showingInfo && showingLegend)
-                                      ? Colors.grey.shade400
+                                      ? Colors.grey.shade600
                                       : Colors.black)),
                         ],
                       ),

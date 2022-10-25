@@ -42,7 +42,7 @@ class _FloatLegendState extends State<FloatLegend> {
               bottomLeft: Radius.circular(8),
               bottomRight: Radius.circular(8)),
           border: Border.all(color: Colors.black, width: 1),
-          color: Colors.grey.shade400, //Colors.lightGreen.shade800,
+          color: Colors.blueGrey.shade200, //Colors.lightGreen.shade800,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.7),

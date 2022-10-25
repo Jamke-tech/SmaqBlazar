@@ -1,8 +1,10 @@
+
 import 'package:SMAQ/screens/detail_station.dart';
 import 'package:SMAQ/screens/home.dart';
 import 'package:SMAQ/services/Data_service.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 
 
 import 'classes/station_model.dart';
@@ -10,6 +12,12 @@ import 'services/Station_service.dart';
 
 void main() {
   Future<Widget> duringSplashFunction() async {
+
+    late bool serviceEnabled;
+    late PermissionStatus permissionGranted;
+    late LocationData locationData;
+    Location userLocation = Location();
+
     //We have to refresh the information from the BBDD that we have
     StationsManager stationsManager = StationsManager();
     DataManager dataManager = DataManager();
@@ -18,6 +26,26 @@ void main() {
         await stationsManager.getAllStationsWithLastData();
 
     await stationsManager.SaveStations(listStations);
+
+
+    /*serviceEnabled = await userLocation.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await userLocation.requestService();
+      if (!serviceEnabled) {
+
+      }
+    }
+    permissionGranted = await userLocation.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await userLocation.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+
+      }
+    }
+    locationData = await userLocation.getLocation();
+
+    await stationsManager.saveLocation(locationData);*/
+
 
     return Home();
   }
@@ -36,10 +64,7 @@ void main() {
       '/detail_station': (context)=> DetailStation(),
     },
     home: AnimatedSplashScreen.withScreenFunction(
-      splash: Container(
-        height: 1200,
-          width: 1200,
-          child: Expanded(child: Image.asset("assets/pictures/SMAQ.png"))),
+      splash: "assets/pictures/SMAQ.png",
       screenFunction: duringSplashFunction,
       duration: 2500,
       splashTransition: SplashTransition.fadeTransition,
