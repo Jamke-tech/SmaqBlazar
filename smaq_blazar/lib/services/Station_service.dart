@@ -101,10 +101,13 @@ class StationsManager {
         var realResponse = await http.Response.fromStream(response);
         List<dynamic> StationList = jsonDecode(realResponse.body)["documents"];
         List<StationModel> stationsReturn = [];
+        //print(StationList);
 
         for (var station in StationList) {
+          //print("Station number: ${station["StationID"]}");
           List<DataStation> dataForThatStation =
               await dataManager.getDataStation(station["StationID"]);
+          //print(dataForThatStation);
 
           StationModel stationModel = StationModel(
               name: station["name"],
@@ -114,8 +117,14 @@ class StationsManager {
               long: station["long"],
               lastData: dataForThatStation,lastAQI:[]);
 
-          stationModel.computeAQI();
-          print(stationModel.lastAQI);
+          //print("Compute AQI: ");
+          if(stationModel.lastData.isNotEmpty) {
+            stationModel.computeAQI(DateTime.parse(
+                stationModel.lastData[0].CreationDate.replaceAll("/", "-")));
+          }else{
+            stationModel.lastAQI=[];
+          }
+          //print(stationModel.lastAQI);
 
           stationsReturn.add(stationModel);
         }

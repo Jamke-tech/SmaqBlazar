@@ -10,15 +10,11 @@ class Endpoints {
   }
 
   //Valores de las API points
-  //final String IpApi = '127.0.0.1:25000'; // per simualció web
   final String MongoDB = 'https://data.mongodb-api.com/app/data-ugjsw/endpoint/data/v1/action'; // per simulació de Android STUDIO
   final String APIKey = "MZpxcJNBp1UMJ8JGdnbH5lhR7sAt3CEiREyVlyfEjFkZBD6vuhE960x9TmQD5GHs";
   final String MongoDbCluster= "Cluster0";
   final String DataBaseName= "SmaqBlazar";
   final String MongoDbCollectionStations= "Stations";
   final String MongoDbCollectionDataCollected="DataCollected";
-  //final String IpApi = '147.83.7.158:25000'; // per docker
-
-
 
 }

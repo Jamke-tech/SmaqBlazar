@@ -44,7 +44,7 @@ class DataManager {
         "sort": {
           "CreationDate": -1, //We want the last data value
         },
-        "limit": 288,
+        "limit": 288, //Són dades de 24h en teoria com a màxim
       });
       request.headers.addAll(headers);
 
@@ -57,6 +57,7 @@ class DataManager {
         List<dynamic> listDocs = jsonDecode(realResponse.body)["documents"];
 
         print(listDocs[0].toString());
+        print("DOCS: ${listDocs.length}");
         //print(listDocs[0]);
         if(listDocs.isNotEmpty){
 
@@ -67,23 +68,24 @@ class DataManager {
             //We add to the vector the value in decendant order
             listData.add(DataStation(StationID: listDocs[i]["StationID"],
                 CreationDate: listDocs[i]["CreationDate"],
-                Humidity: listDocs[i]["Weather"]["Humidity"],
-                Temperature: listDocs[i]["Weather"]["Temperature"],
-                Pressure: listDocs[i]["Weather"]["Pressure"],
+                Humidity: listDocs[i]["Weather"]["Humidity"].toDouble(),
+                Temperature: listDocs[i]["Weather"]["Temperature"].toDouble(),
+                Pressure: listDocs[i]["Weather"]["Pressure"].toDouble(),
                 Rain: listDocs[i]["Weather"]["Rain"].toDouble(),
-                CxCO: listDocs[i]["Pollutants"]["CxCO"].toDouble(),
-                CxNO2: listDocs[i]["Pollutants"]["CxNO2"].toDouble(),
-                CxO3: listDocs[i]["Pollutants"]["CxO3"].toDouble(),
-                CxSO2: listDocs[i]["Pollutants"]["CxSO2"].toDouble(),
+                //As we save the pollutants in ppb we have to divide the ppb by 1000 to get ppm
+                CxCO: listDocs[i]["Pollutants"]["CxCO"].toDouble()/1000,
+                CxNO2: listDocs[i]["Pollutants"]["CxNO2"].toDouble()/1000,
+                CxO3: listDocs[i]["Pollutants"]["CxO3"].toDouble()/1000,
+                CxSO2: listDocs[i]["Pollutants"]["CxSO2"].toDouble()/1000,
                 PM10: listDocs[i]["Particles"]["PM10"],
                 PM25: listDocs[i]["Particles"]["PM25"],
-                BlueLux: listDocs[i]["Light"]["BlueLux"],
-                GreenLux: listDocs[i]["Light"]["GreenLux"],
-                IR: listDocs[i]["Light"]["IR"],
-                RedLux: listDocs[0]["Light"]["RedLux"],
+                BlueLux: listDocs[i]["Light"]["BlueLux"].toDouble(),
+                GreenLux: listDocs[i]["Light"]["GreenLux"].toDouble(),
+                IR: listDocs[i]["Light"]["IR"].toDouble(),
+                RedLux: listDocs[i]["Light"]["RedLux"].toDouble(),
                 UV: listDocs[i]["Light"]["UV"],
                 UVSource: listDocs[i]["Light"]["UVSource"],
-                Sound: double.parse(listDocs[i]["Sound"])));
+                Sound: listDocs[i]["Sound"].toDouble()));
           }
 
           return listData;

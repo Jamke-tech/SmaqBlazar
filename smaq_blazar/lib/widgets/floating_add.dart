@@ -49,8 +49,8 @@ class _FloatAddState extends State<FloatAdd> {
               topRight: Radius.zero,
               bottomLeft: Radius.circular(8),
               bottomRight: Radius.circular(8)),
-          border: Border.all(color: Colors.black, width: 1),
-          color: Colors.grey.shade400, //Colors.lightGreen.shade800,
+          //border: Border.all(color: Colors.black, width: 1),
+          color: Colors.blueGrey.shade200, //Colors.lightGreen.shade800,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.7),
@@ -278,7 +278,7 @@ class _FloatAddState extends State<FloatAdd> {
                           // If the form is valid, display a snackbar. In the real world,
                           // you'd often call a server or save the information in a database.
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Guardadnt Dades...')),
+                            const SnackBar(content: Text('Guardant dades al núvol ...')),
                           );
 
                           StationsManager stationsManager = StationsManager();
@@ -296,13 +296,13 @@ class _FloatAddState extends State<FloatAdd> {
                           if (isAnError) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  content: Text('Error Saving Data')),
+                                  content: Text('Error en guardar')),
                             );
                             setState(() {});
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  content: Text('Station Saved on BBDD')),
+                                  content: Text('Estació guardada amb éxit, ja pots tancar la finestra.')),
                             );
                           }
 

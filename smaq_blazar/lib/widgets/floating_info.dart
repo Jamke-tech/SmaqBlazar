@@ -1,3 +1,4 @@
+import 'package:SMAQ/classes/Time.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -24,6 +25,10 @@ class FloatInfo extends StatefulWidget {
 class _FloatInfoState extends State<FloatInfo> {
   @override
   Widget build(BuildContext context) {
+
+    TimeAnalizer time = TimeAnalizer();
+
+
     return GestureDetector(
         onTap: () {
           //We have to show the full info for this station
@@ -36,7 +41,7 @@ class _FloatInfoState extends State<FloatInfo> {
         child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.black, width: 1),
+              //border: Border.all(color: Colors.black, width: 1),
               color: widget.boxcolor, //Colors.lightGreen.shade800,
               boxShadow: [
                 BoxShadow(
@@ -80,72 +85,75 @@ class _FloatInfoState extends State<FloatInfo> {
                 ),
                 Expanded(
                   flex: 3,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Row(
-                        children: [
-                          const Text("AQI",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4),
-                            child:
-                            Text(widget.station.getAQI().toString(),
+                  child: FittedBox(
+                    fit: BoxFit.fitWidth,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Row(
+                          children: [
+                            const Text("AQI",
                                 style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: widget.AqiColor,
-                                )),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.device_thermostat_outlined,
-                            size: 16,
-                            color: Colors.white,
-                          ),
-                          Text( widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Temperature.toStringAsFixed(2)}ºC": "ERROR",
-                              style: TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const Icon(
-                            WeatherIcons.humidity,
-                            size: 16,
-                            color: Colors.white,
-                          ),
-                          Text(widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Humidity.toStringAsFixed(2)}ºC": "ERROR",
-                              style: const TextStyle(
-                                fontSize: 16,
-                              )),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.tornado_rounded,
-                            size: 16,
-                            color: Colors.white,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left:4.0),
-                            child: Text(widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Pressure.toStringAsFixed(2)}ºC": "ERROR",
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white)),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4),
+                              child:
+                              Text(widget.station.getAQI()!=-1 ? widget.station.getAQI().toString(): "X",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: widget.AqiColor,
+                                  )),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.device_thermostat_outlined,
+                              size: 16,
+                              color: Colors.white,
+                            ),
+                            Text( widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Temperature.toStringAsFixed(2)}ºC": "ERROR",
                                 style: const TextStyle(
                                   fontSize: 16,
                                 )),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              WeatherIcons.humidity,
+                              size: 16,
+                              color: Colors.white,
+                            ),
+                            Text(widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Humidity.toStringAsFixed(2)} %": "ERROR",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                )),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.tornado_rounded,
+                              size: 16,
+                              color: Colors.white,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left:4.0),
+                              child: Text(widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Pressure.toStringAsFixed(2)} hPa": "ERROR",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                  )),
+                            ),
+                          ],
+                        ),
 
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 Expanded(
@@ -154,7 +162,7 @@ class _FloatInfoState extends State<FloatInfo> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     //crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(widget.station.lastData.isNotEmpty ? widget.station.lastData[0].CreationDate: "NO DATA AVAILABLE FOR THIS STATION",
+                      Text(widget.station.lastData.isNotEmpty ? time.getDateTimeInLocal(widget.station.lastData[0].CreationDate): "NO DATA AVAILABLE FOR THIS STATION",
                             style: const TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,

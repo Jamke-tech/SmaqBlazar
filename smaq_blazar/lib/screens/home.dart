@@ -12,6 +12,7 @@ import '../widgets/floating_info.dart';
 import 'package:location/location.dart';
 
 import '../widgets/floating_legend.dart';
+import '../widgets/floating_position.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -19,21 +20,23 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
- late LocationData locationData;
+  late LocationData locationData;
+  late bool serviceEnabled;
+  late PermissionStatus permissionGranted;
+  Location userLocation = Location();
+  MapController mapController = MapController();
 
   int _counter = 0;
 
   bool satellite = false;
-  late StationModel stationShown =
-  StationModel(
+  late StationModel stationShown = StationModel(
       name: "ERROR",
       IDStation: "ERROR",
       Description: "ERROR",
       lat: 0,
       long: 0,
       lastData: [],
-  lastAQI: []);
+      lastAQI: []);
   Color boxColor = Colors.lightGreen.shade800;
   Color AqiColor = Colors.lightGreen.shade800;
   bool addingStation = false;
@@ -51,29 +54,27 @@ class _HomeState extends State<Home> {
         1013.8)
   ];*/
 
-  List<StationModel> StationList =[];
+  List<StationModel> StationList = [];
 
   List<Marker> markersList = [];
 
   @override
-  void initState(){
+  void initState() {
     //Here we have to check location an consult infromation from BBDD
     //checkAndGetLocation();
 
     //We have to extract the data from the StationsList
-    StationsManager stationsManager =
-    StationsManager();
+    StationsManager stationsManager = StationsManager();
     StationList = stationsManager.listOfStations;
     //locationData= stationsManager.locationUser;
     super.initState();
-
   }
-
 
   @override
   Widget build(BuildContext context) {
     int i = 0;
     markersList = [];
+    //print(StationList[0]);
     for (StationModel station in StationList) {
       i++;
       print(station.lat);
@@ -105,7 +106,6 @@ class _HomeState extends State<Home> {
       print("marker ${i}");
     }
 
-
     return Scaffold(
       body: Stack(clipBehavior: Clip.hardEdge, fit: StackFit.expand, children: [
         Center(
@@ -113,8 +113,27 @@ class _HomeState extends State<Home> {
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: FlutterMap(
+
+                mapController: mapController,
                 options: MapOptions(
-                    center: LatLng(markersList[0].point.latitude,markersList[0].point.longitude),
+                  onLongPress: (tapPosition, latLng){
+                    setState(() {
+                      stationShown = StationModel(
+                          name: "ERROR",
+                          IDStation: "ERROR",
+                          Description: "ERROR",
+                          lat: 0,
+                          long: 0,
+                          lastData: [],
+                          lastAQI: []);
+
+
+
+
+                    });
+                  },
+                    center: LatLng(markersList[0].point.latitude,
+                        markersList[0].point.longitude),
                     minZoom: 2,
                     zoom: 14,
                     maxZoom: 20,
@@ -177,7 +196,7 @@ class _HomeState extends State<Home> {
                                   bottomLeft: Radius.circular(8),
                                   bottomRight: Radius.zero)))
                           : BorderRadius.circular(8),
-                      border: Border.all(color: Colors.black, width: 1),
+                      //border: Border.all(color: Colors.black, width: 1),
                       color: Colors.blueGrey.shade200, //Colors.grey.shade400,
                       boxShadow: [
                         BoxShadow(
@@ -247,14 +266,14 @@ class _HomeState extends State<Home> {
                                   //We have to refresh the information from the BBDD that we have
                                   StationsManager stationsManager =
                                       StationsManager();
-                                                       List<StationModel> listStations =
+                                  List<StationModel> listStations =
                                       await stationsManager
                                           .getAllStationsWithLastData();
 
                                   if (listStations.isEmpty) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                          content: Text('Error Getting Data')),
+                                          content: Text('No hem pogut extreure les dades...')),
                                     );
                                   } else {
                                     setState(() {
@@ -264,7 +283,7 @@ class _HomeState extends State<Home> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                           content: Text(
-                                              'Information on display refreshed')),
+                                              'Informació de pantalla actualitzada')),
                                     );
                                   }
                                 }
@@ -300,24 +319,57 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: showingInfo
-                      ? (addingStation
-                          ? FloatAdd()
-                          : showingLegend
-                              ? FloatLegend()
-                              : Container())
-                      : Container(),
+                Align(
+                  alignment: showingInfo? Alignment.topCenter: Alignment.topRight,
+                  child: Padding(
+                    padding: showingInfo? const EdgeInsets.only(top: 10): const EdgeInsets.only(top: 20, right: 10),
+                    child: showingInfo
+                        ? (addingStation
+                            ? FloatAdd()
+                            : showingLegend
+                                ? FloatLegend()
+                                : Container())
+                        :FloatPosition(
+                      isRefresh: false,
+                      functionWhenClicked: () async {
+                        serviceEnabled = await userLocation.serviceEnabled();
+                        if (!serviceEnabled) {
+                          serviceEnabled =
+                          await userLocation.requestService();
+                          if (!serviceEnabled) {
+                            return;
+                          }
+                        }
+                        permissionGranted =
+                        await userLocation.hasPermission();
+                        if (permissionGranted == PermissionStatus.denied) {
+                          permissionGranted =
+                          await userLocation.requestPermission();
+                          if (permissionGranted != PermissionStatus.granted) {
+                            return;
+                          }
+                        }
+                        locationData = await userLocation.getLocation();
+
+                        setState(() {
+                          mapController.move(
+                              LatLng(locationData.latitude!,
+                                  locationData.longitude!),
+                              15);
+                        });
+                      },
+                    ) ,
+                  ),
                 ),
               ],
             ),
           ),
         ),
+
         Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.only(bottom:(16)),
             child: showingInfo && !showingLegend
                 ? Container()
                 : (stationShown.name == "ERROR"

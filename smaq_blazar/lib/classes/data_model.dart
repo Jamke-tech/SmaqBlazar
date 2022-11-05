@@ -16,10 +16,10 @@ class DataStation {
   int PM10;
   int PM25;
 
-  int BlueLux;
-  int GreenLux;
-  int IR;
-  int RedLux;
+  double BlueLux;
+  double GreenLux;
+  double IR;
+  double RedLux;
   int UV;
   String UVSource;
 
