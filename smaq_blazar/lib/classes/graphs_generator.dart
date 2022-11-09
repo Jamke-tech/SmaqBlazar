@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 class GraphsGenerator {
   //Class to generate all the information for the graphs generation
 
+  Widget textAxis = Container();
+
 
   List<FlSpot> getDataForGraph(StationModel station, String selectedTitleGraphs,
       String selectedSubTitleGraphs, int maxTime) {
@@ -23,17 +25,17 @@ class GraphsGenerator {
       while ( actualDataTime
           .difference(lastDataTime)
           .inHours < maxTime && lupilupi < station.lastData.length -1) {
-        print(actualDataTime
+        /*print(actualDataTime
             .difference(lastDataTime)
-            .inHours);
+            .inHours);*/
 
         maxNum++;
         lastDataTime=DateTime.parse(
             station.lastData[lupilupi+1].CreationDate.replaceAll("/", "-"));
         lupilupi++;
       }
-      print(lupilupi);
-      print(maxNum);
+      /*print(lupilupi);
+      print(maxNum);*/
 
 
 
@@ -47,6 +49,9 @@ class GraphsGenerator {
             lupilupi--;
             loop++;
           }
+          textAxis = const Text(
+            "Temperatura (ºC)"
+          );
         }else if(selectedSubTitleGraphs=="Humitat"){
           while ( loop<maxNum) {
             //Afegeixo totes les dades fins que no tinc mes o fins que el temps no es el que poso
@@ -55,6 +60,9 @@ class GraphsGenerator {
             lupilupi--;
             loop++;
           }
+          textAxis = const Text(
+              "Humitat (%)"
+          );
         }else if(selectedSubTitleGraphs=="Pressió"){
           while ( loop<maxNum) {
             //Afegeixo totes les dades fins que no tinc mes o fins que el temps no es el que poso
@@ -63,6 +71,9 @@ class GraphsGenerator {
             lupilupi--;
             loop++;
           }
+          textAxis = const Text(
+              "Pressió (hPa)"
+          );
         }else{
           while ( loop<maxNum) {
             //Afegeixo totes les dades fins que no tinc mes o fins que el temps no es el que poso
@@ -71,7 +82,11 @@ class GraphsGenerator {
             lupilupi--;
             loop++;
           }
+          textAxis = const Text(
+              "Pluja (mm)");
         }
+
+
       } else if (selectedTitleGraphs == "Contaminants") {
         if(selectedSubTitleGraphs=="CO"){
           while ( loop<maxNum) {
@@ -81,6 +96,9 @@ class GraphsGenerator {
             lupilupi--;
             loop++;
           }
+          textAxis = const Text(
+              "Cx CO (ppm)"
+          );
         }else if (selectedSubTitleGraphs=="O3"){
           while ( loop<maxNum) {
             //Afegeixo totes les dades fins que no tinc mes o fins que el temps no es el que poso
@@ -89,6 +107,9 @@ class GraphsGenerator {
             lupilupi--;
             loop++;
           }
+          textAxis = const Text(
+              "Cx O3 (ppm)"
+          );
         }else if(selectedSubTitleGraphs=="NO2"){
           while ( loop<maxNum) {
             //Afegeixo totes les dades fins que no tinc mes o fins que el temps no es el que poso
@@ -97,6 +118,9 @@ class GraphsGenerator {
             lupilupi--;
             loop++;
           }
+          textAxis = const Text(
+              "Cx NO2 (ppm)"
+          );
         }else{
           while ( loop<maxNum) {
             //Afegeixo totes les dades fins que no tinc mes o fins que el temps no es el que poso
@@ -105,7 +129,11 @@ class GraphsGenerator {
             lupilupi--;
             loop++;
           }
+          textAxis = const Text(
+              "Cx SO2 (ppm)"
+          );
         }
+
       } else if (selectedTitleGraphs == "Partícules") {
         if(selectedSubTitleGraphs=="PM 2.5"){
           while ( loop<maxNum) {
@@ -115,6 +143,9 @@ class GraphsGenerator {
             lupilupi--;
             loop++;
           }
+          textAxis = const Text(
+              "PM 2.5 (ug/m3)"
+          );
         }else{
           while ( loop<maxNum) {
             //Afegeixo totes les dades fins que no tinc mes o fins que el temps no es el que poso
@@ -123,6 +154,9 @@ class GraphsGenerator {
             lupilupi--;
             loop++;
           }
+          textAxis = const Text(
+              "PM 2.5 (ug/m3)"
+          );
         }
 
       } else if (selectedTitleGraphs == "Llum") {
@@ -134,7 +168,10 @@ class GraphsGenerator {
             lupilupi--;
             loop++;
           }
-        }else{
+          textAxis = const Text(
+              "UV Index "
+          );
+        }else if(selectedSubTitleGraphs=="Intensitat R"){
           while (loop<maxNum) {
             //Afegeixo totes les dades fins que no tinc mes o fins que el temps no es el que poso
             vectorData.add(
@@ -142,6 +179,42 @@ class GraphsGenerator {
             lupilupi--;
             loop++;
           }
+          textAxis = const Text(
+              "Llum vermella (lux)"
+          );
+        }else if(selectedSubTitleGraphs=="Intensitat B"){
+          while (loop<maxNum) {
+            //Afegeixo totes les dades fins que no tinc mes o fins que el temps no es el que poso
+            vectorData.add(
+                FlSpot(lupilupi.toDouble(), station.lastData[loop].BlueLux));
+            lupilupi--;
+            loop++;
+          }
+          textAxis = const  Text(
+              "Llum blava (lux)"
+          );
+        }else if(selectedSubTitleGraphs=="Intensitat G"){
+          while (loop<maxNum) {
+            //Afegeixo totes les dades fins que no tinc mes o fins que el temps no es el que poso
+            vectorData.add(
+                FlSpot(lupilupi.toDouble(), station.lastData[loop].GreenLux));
+            lupilupi--;
+            loop++;
+          }
+          textAxis = const  Text(
+              "Llum verda (lux)"
+          );
+        }else {
+          while (loop<maxNum) {
+            //Afegeixo totes les dades fins que no tinc mes o fins que el temps no es el que poso
+            vectorData.add(
+                FlSpot(lupilupi.toDouble(), station.lastData[loop].IR));
+            lupilupi--;
+            loop++;
+          }
+          textAxis = const Text(
+              "Llum infraroja (lux)"
+          );
         }
       } else {
         while ( loop<maxNum) {
@@ -151,6 +224,9 @@ class GraphsGenerator {
           lupilupi--;
           loop++;
         }
+        textAxis = const Text(
+            "Intensitat sonora (dbSPL)"
+        );
       }
 
       return
@@ -179,15 +255,18 @@ class GraphsGenerator {
     //We add a 20% margin for maximum value
     double maxRealY;
     if(maxY*1.2 > maxY+2){
-       maxRealY= (maxY).toInt().toDouble() +2;
+       maxRealY= (maxY).toInt().toDouble() +5;
     }else{
-      maxRealY = (maxY*1.2).toInt().toDouble() ;
+      maxRealY = (maxY*1.2).toInt().toDouble()  ;
+    }
+    if(maxRealY>20000){
+      maxRealY=maxRealY+5000;
     }
 
 
 
-    if(maxRealY<4){
-      maxRealY=4.0;
+    if(maxRealY<=4){
+      maxRealY=5.0;
     }
     return maxRealY;
 
@@ -216,14 +295,15 @@ class GraphsGenerator {
   }
   double getInterval(List<FlSpot> listSpots){
     double interval = ((getMaxY(listSpots) -getMinY(listSpots))~/15).toDouble();
-    print("interval: $interval");
-    if(interval<4){
-      interval=1;
+    //print("interval: $interval");
+    if(interval<2){
+      interval=2;
     }
-    print(interval);
+    //print(interval);
     return interval;
 
   }
+
 
 
 

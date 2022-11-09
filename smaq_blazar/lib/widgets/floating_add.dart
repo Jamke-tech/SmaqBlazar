@@ -29,7 +29,7 @@ class _FloatAddState extends State<FloatAdd> {
       point: LatLng(41.35581, 2.14141),
       builder: (context) => const Icon(
             Icons.location_on_outlined,
-            color: Colors.red,
+            color: Color(0xff8CE0B0),
             size: 30,
           ));
   bool markerTapOrLocationSet = false;
@@ -75,7 +75,7 @@ class _FloatAddState extends State<FloatAdd> {
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black)),
+                              color: Color(0xff00877F))),
                       Expanded(
                         child: TextFormField(
                           controller: IDStation,
@@ -91,7 +91,7 @@ class _FloatAddState extends State<FloatAdd> {
                   ),
                   const Divider(
                     color: Colors.black,
-                    height: 4,
+                    height: 1,
                     thickness: 1,
                     indent: 0,
                     endIndent: 0,
@@ -102,9 +102,10 @@ class _FloatAddState extends State<FloatAdd> {
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black)),
+                              color: Color(0xff00877F))),
                       Expanded(
                         child: TextFormField(
+                          textCapitalization: TextCapitalization.sentences,
                           controller: name,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -118,7 +119,7 @@ class _FloatAddState extends State<FloatAdd> {
                   ),
                   const Divider(
                     color: Colors.black,
-                    height: 4,
+                    height: 1,
                     thickness: 1,
                     indent: 0,
                     endIndent: 0,
@@ -129,7 +130,7 @@ class _FloatAddState extends State<FloatAdd> {
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black)),
+                              color: Color(0xff00877F))),
                       Expanded(
                         child: TextFormField(
                           controller: Description,
@@ -145,7 +146,7 @@ class _FloatAddState extends State<FloatAdd> {
                   ),
                   const Divider(
                     color: Colors.black,
-                    height: 4,
+                    height: 1,
                     thickness: 1,
                     indent: 0,
                     endIndent: 0,
@@ -154,7 +155,7 @@ class _FloatAddState extends State<FloatAdd> {
                       style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black)),
+                          color: Color(0xff00877F))),
 
                   /*Divider(
                     color: Colors.black,
@@ -166,7 +167,7 @@ class _FloatAddState extends State<FloatAdd> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
                     child: Container(
-                      height: 120,
+                      height: 140,
                       child: Stack(children: [
                         FlutterMap(
                             mapController: mapController,
@@ -186,8 +187,8 @@ class _FloatAddState extends State<FloatAdd> {
                                         point: latlng,
                                         builder: (context) => const Icon(
                                               Icons.location_on_outlined,
-                                              color: Colors.black,
-                                              size: 20,
+                                              color:  Color(0xff00877F),
+                                              size: 22,
                                             ));
 
                                     markerTapOrLocationSet = true;
@@ -214,7 +215,7 @@ class _FloatAddState extends State<FloatAdd> {
                             padding: const EdgeInsets.only(right: 8),
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.grey.shade600,
+                                  backgroundColor: Colors.blueGrey.shade400,
                                   fixedSize: Size(10, 10),
                                 ),
                                 onPressed: () async {
@@ -247,8 +248,8 @@ class _FloatAddState extends State<FloatAdd> {
                                           locationData.longitude!),
                                       builder: (context) => const Icon(
                                             Icons.location_on_outlined,
-                                            color: Colors.black,
-                                            size: 20,
+                                            color:  Color(0xff00877F),
+                                            size: 22,
                                           ));
                                   setState(() {
                                     markerTapOrLocationSet = true;
@@ -261,7 +262,7 @@ class _FloatAddState extends State<FloatAdd> {
                                 child: const Icon(
                                   Icons.my_location,
                                   size: 25,
-                                  color: Colors.white,
+                                  color:  Colors.white,
                                 )),
                           ),
                         ),
@@ -270,7 +271,7 @@ class _FloatAddState extends State<FloatAdd> {
                   ),
                   ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey.shade600,
+                        backgroundColor: Colors.blueGrey.shade400,
                       ),
                       onPressed: () async {
                         //We validate the form
@@ -316,7 +317,7 @@ class _FloatAddState extends State<FloatAdd> {
                           Icon(
                             Icons.save,
                             size: 20,
-                            color: Colors.white,
+                            color:  Colors.white,
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 20),

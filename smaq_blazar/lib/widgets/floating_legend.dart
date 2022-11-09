@@ -13,26 +13,10 @@ class FloatLegend extends StatefulWidget {
 }
 
 class _FloatLegendState extends State<FloatLegend> {
-  final _formValidationKey = GlobalKey<FormState>();
-  MapController mapController = MapController();
-  Marker markerToDisplay = Marker(
-      width: 30,
-      height: 30,
-      point: LatLng(41.35581, 2.14141),
-      builder: (context) => Icon(
-            Icons.location_on_outlined,
-            color: Colors.red,
-            size: 30,
-          ));
-  bool markerTapOrLocationSet = false;
 
   @override
   Widget build(BuildContext context) {
-    Location location = new Location();
 
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
 
     return Container(
         decoration: BoxDecoration(

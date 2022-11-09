@@ -61,7 +61,7 @@ void main() {
       splashTransition: SplashTransition.fadeTransition,
       //pageTransitionType: PageTransitionType.scale,
       backgroundColor: const Color(0xFFc8c8c7),
-      splashIconSize: 300,
+      splashIconSize: 325,
 
       //outputAndHome: 1,
     ),
@@ -89,7 +89,7 @@ Widget getSplash(){
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                   fontSize: 15,)),
-            TyperAnimatedText('Ja casi hem acabat...',
+            TyperAnimatedText('Ja quasi hem acabat...',
                 textStyle: const TextStyle(
                   color: Colors.black,
                     fontSize: 15, fontWeight: FontWeight.bold)),

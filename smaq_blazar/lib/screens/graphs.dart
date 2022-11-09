@@ -1,3 +1,4 @@
+import 'package:SMAQ/classes/Time.dart';
 import 'package:SMAQ/classes/graphs_generator.dart';
 import 'package:SMAQ/classes/station_model.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -20,6 +21,11 @@ class _GraphsStationState extends State<GraphsStation> {
   String selectedTitleGraphs = "nope";
   String selectedSubTitleGraphs = "nope";
   List<String> subTitle = [];
+  TimeAnalizer timeAnalizer = TimeAnalizer();
+  List<FlSpot> listSpots=[];
+  int timeToShow = 24;
+  double timeSelectedToShow=24;
+  bool changeValueShow=true;
 
   //Variables per la selecció de gràfics
   List<String> firstTitle = [
@@ -32,7 +38,7 @@ class _GraphsStationState extends State<GraphsStation> {
   List<String> pollutionsGraphs = ['CO', 'O3', 'NO2', 'SO2'];
   List<String> meteoGraphs = ['Temperatura', 'Humitat', 'Pressió', 'Pluja'];
   List<String> particlesGraphs = ['PM 2.5', 'PM 10'];
-  List<String> lightGraphs = ['UV', 'Espectre'];
+  List<String> lightGraphs = ['UV', 'Intensitat R','Intensitat B','Intensitat G','Infrarojos'];
   List<String> soundGraphs = ['dbSPL'];
 
   @override
@@ -56,23 +62,17 @@ class _GraphsStationState extends State<GraphsStation> {
   Widget XAxisTitles(double value, TitleMeta meta) {
     const style = TextStyle(
       color: Colors.black,
-      fontSize: 14,
+      fontSize: 10,
     );
-    Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = const Text('MAR', style: style);
-        break;
-      case 5:
-        text = const Text('JUN', style: style);
-        break;
-      case 8:
-        text = const Text('SEP', style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
+    //We have to get the time in hours and minutes
+    String textString="";
+    if(listSpots.isNotEmpty) {
+      textString = timeAnalizer.getDateTimeInLocalHourMinute(
+          station.lastData[(listSpots.length - value).toInt()].CreationDate);
     }
+    print(textString);
+    Widget text= Text(textString,style: style);
+
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: text,
@@ -84,22 +84,10 @@ class _GraphsStationState extends State<GraphsStation> {
       color: Colors.black,
       fontSize: 10,
     );
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '10K';
-        break;
-      case 3:
-        text = '30k';
-        break;
-      case 5:
-        text = '50k';
-        break;
-      default:
-        return Container();
-    }
+    String text= value.toStringAsFixed(0);
 
-    return Text(text, style: style, textAlign: TextAlign.left);
+    return Align(alignment:AlignmentDirectional.center,
+        child: Text(text, style: style, textAlign: TextAlign.left));
   }
 
   @override
@@ -145,12 +133,16 @@ class _GraphsStationState extends State<GraphsStation> {
 
     //Quan tenim el titol i el subtitol posem extraiem les dades coresponents i generem els valors
     //Nova classe GraphsGenerator
+    //Hem de modificar el valor de timeToShow si el changeValueShow es true
+    if(changeValueShow){
+      timeToShow=timeSelectedToShow.toInt();
+    }
+    changeValueShow=false;
 
+    listSpots= generatorGraphs.getDataForGraph(station, selectedTitleGraphs, selectedSubTitleGraphs, timeToShow);
 
-    List<FlSpot> listSpots = generatorGraphs.getDataForGraph(station, selectedTitleGraphs, selectedSubTitleGraphs, 24);
-    print("Expected: ${3*12} Real: ${listSpots.length}");
-
-
+    //We compute the vertical interval according to the time to show
+    double verticalInterval=(listSpots.length)/15;
 
     return Scaffold(
       body: SafeArea(
@@ -161,13 +153,13 @@ class _GraphsStationState extends State<GraphsStation> {
               width: MediaQuery.of(context).size.width,
               child: Padding(
                 padding: EdgeInsets.fromLTRB(
-                    8, MediaQuery.of(context).size.height * 0.15, 8, 8),
+                    8, MediaQuery.of(context).size.height * 0.19, 30, 8),
                 child: LineChart(LineChartData(
                   gridData: FlGridData(
                     show: true,
                     drawVerticalLine: true,
                     horizontalInterval: generatorGraphs.getInterval(listSpots),
-                    verticalInterval: 10,
+                    verticalInterval: verticalInterval,
                     getDrawingHorizontalLine: (value) {
                       return FlLine(
                         color: Colors.black,
@@ -192,17 +184,19 @@ class _GraphsStationState extends State<GraphsStation> {
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        reservedSize: 23,
-                        interval: 10,
+                        reservedSize: 18,
+                        interval: verticalInterval,
                         getTitlesWidget: XAxisTitles,
                       ),
                     ),
                     leftTitles: AxisTitles(
+                      drawBehindEverything: true,
+                      axisNameWidget: generatorGraphs.textAxis,
                       sideTitles: SideTitles(
                         showTitles: true,
-                        interval: 1,
+                        interval: generatorGraphs.getInterval(listSpots),
                         getTitlesWidget: YAxisTitles,
-                        reservedSize: 23,
+                        reservedSize: 40,
                       ),
                     ),
                   ),
@@ -220,8 +214,8 @@ class _GraphsStationState extends State<GraphsStation> {
                       isCurved: true,
                       gradient: const LinearGradient(
                         colors: [
-                           Color(0xff23b6e6),
-                           Color(0xff02d39a),
+                           Color(0xff8CE0B0),
+                           Color(0xff00877F),
                         ],
                       ),
                       barWidth: 2,
@@ -233,8 +227,8 @@ class _GraphsStationState extends State<GraphsStation> {
                         show: true,
                         gradient: LinearGradient(
                           colors: [
-                            const Color(0xff23b6e6),
-                            const Color(0xff02d39a),
+                            const Color(0xff8CE0B0),
+                            Color(0xff00877F),
                           ].map((color) => color.withOpacity(0.4)).toList(),
                         ),
                       ),
@@ -247,12 +241,126 @@ class _GraphsStationState extends State<GraphsStation> {
               alignment: Alignment.topRight,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 12, 30, 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 16),
-                      child: Container(
+                child: SizedBox(
+                  height: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(85, 0, 16, 16),
+                          child: SfLinearGauge(
+                            labelOffset: 4,
+                            labelPosition: LinearLabelPosition.outside,
+                            minimum: 1,
+                            maximum: 23,
+                            axisTrackExtent: 24,
+                            animateAxis: true,
+                            showTicks: true,
+
+                            majorTickStyle: const LinearTickStyle(
+                              color: Colors.black,
+                              length: 2,
+                            ),
+                            minorTicksPerInterval: 0,
+                            interval: 2,
+                            axisTrackStyle: LinearAxisTrackStyle(
+                                thickness: 16,
+                                color: Colors.blueGrey.shade200,
+                                edgeStyle: LinearEdgeStyle.bothCurve,
+                                gradient: const LinearGradient(
+                                  //colors: [Colors.blueGrey.shade200, Colors.blueGrey],
+                                    colors:[ Color(0xff8CE0B0),
+                                      Color(0xff00877F)],
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                    //stops: [0.1, 0.5],
+                                    tileMode: TileMode.clamp)),
+                            labelFormatterCallback: (label) {
+                              return "${(int.parse(label)+1)}h";
+                            },
+
+                            markerPointers: [
+                              LinearWidgetPointer(
+                                  value: timeSelectedToShow.toDouble(),
+                                  offset: 0,
+                                  markerAlignment: LinearMarkerAlignment.end,
+                                  dragBehavior: LinearMarkerDragBehavior.constrained,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      timeSelectedToShow = newValue;
+                                    });
+                                  },
+                                  onChangeEnd: (newValue) {
+                                    setState(() {
+                                      timeSelectedToShow = (newValue.round()).toDouble();
+                                      changeValueShow = true;
+                                    });
+                                  },
+                                  position: LinearElementPosition.cross,
+                                  child: const Icon(
+                                    Icons.access_time_filled_outlined,
+                                    size: 28,
+                                    color: Colors.black,
+                                  ))
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            //border: Border.all(color: Colors.black, width: 1),
+                            color: Colors.blueGrey.shade400,
+                            //Colors.lightGreen.shade800,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blueGrey.withOpacity(0.4),
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                                //offset: Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: DropdownButton(
+                              underline: Container(),
+                              elevation: 8,
+                              iconSize: 20,
+                              alignment: AlignmentDirectional.center,
+                              icon: const Icon(
+                                Icons.arrow_drop_down_circle_outlined,
+                                color: Colors.black,
+                              ),
+                              value: selectedTitleGraphs,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  //Repaint graphic
+                                  lastTitle = selectedTitleGraphs;
+                                  selectedTitleGraphs = newValue!;
+                                });
+                              },
+                              items: firstTitle.map((String titleGraphs) {
+                                return DropdownMenuItem<String>(
+                                  value: titleGraphs,
+                                  child: Text(titleGraphs,
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black,
+
+                                      )),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 105,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           //border: Border.all(color: Colors.black, width: 1),
@@ -269,91 +377,42 @@ class _GraphsStationState extends State<GraphsStation> {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
-                          child: DropdownButton(
-                            underline: Container(),
-                            elevation: 8,
-                            iconSize: 20,
-                            alignment: AlignmentDirectional.center,
-                            icon: const Icon(
-                              Icons.arrow_drop_down_circle_outlined,
-                              color: Colors.black,
-                            ),
-                            value: selectedTitleGraphs,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                //Repaint graphic
-                                lastTitle = selectedTitleGraphs;
-                                selectedTitleGraphs = newValue!;
-                              });
-                            },
-                            items: firstTitle.map((String titleGraphs) {
-                              return DropdownMenuItem<String>(
-                                value: titleGraphs,
-                                child: Text(titleGraphs,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.black,
-
-                                    )),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 105,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        //border: Border.all(color: Colors.black, width: 1),
-                        color: Colors.blueGrey.shade400,
-                        //Colors.lightGreen.shade800,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.blueGrey.withOpacity(0.4),
-                            spreadRadius: 1,
-                            blurRadius: 5,
-                            //offset: Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            DropdownButton(
-                              underline: Container(),
-                              alignment: AlignmentDirectional.center,
-                              elevation: 8,
-                              iconSize: 20,
-                              icon: const Icon(
-                                Icons.arrow_drop_down_circle_outlined,
-                                color: Colors.black,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              DropdownButton(
+                                underline: Container(),
+                                alignment: AlignmentDirectional.center,
+                                elevation: 8,
+                                iconSize: 20,
+                                icon: const Icon(
+                                  Icons.arrow_drop_down_circle_outlined,
+                                  color: Colors.black,
+                                ),
+                                value: selectedSubTitleGraphs,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    //Repaint graphic
+                                    selectedSubTitleGraphs = newValue!;
+                                  });
+                                },
+                                items: subTitle.map((String graphs) {
+                                  return DropdownMenuItem<String>(
+                                    value: graphs,
+                                    child: Text(graphs,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                        )),
+                                  );
+                                }).toList(),
                               ),
-                              value: selectedSubTitleGraphs,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  //Repaint graphic
-                                  selectedSubTitleGraphs = newValue!;
-                                });
-                              },
-                              items: subTitle.map((String graphs) {
-                                return DropdownMenuItem<String>(
-                                  value: graphs,
-                                  child: Text(graphs,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black,
-                                      )),
-                                );
-                              }).toList(),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -380,4 +439,6 @@ class _GraphsStationState extends State<GraphsStation> {
       ),
     );
   }
+
+
 }

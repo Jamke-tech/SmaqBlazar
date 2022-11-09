@@ -78,6 +78,8 @@ class _EvolutionStationState extends State<EvolutionStation> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xff00877F)
             ),
           ),
         ),
@@ -665,6 +667,7 @@ class _EvolutionStationState extends State<EvolutionStation> {
             child: SfLinearGauge(
               minimum: 0,
               maximum: 10,
+              isAxisInversed:true,
               axisTrackExtent: 10,
               animateAxis: true,
               showTicks: true,
@@ -678,11 +681,13 @@ class _EvolutionStationState extends State<EvolutionStation> {
                   thickness: 16,
                   color: Colors.blueGrey.shade200,
                   edgeStyle: LinearEdgeStyle.bothCurve,
-                  gradient: LinearGradient(
-                      colors: [Colors.blueGrey.shade200, Colors.blueGrey],
+                  gradient: const LinearGradient(
+                      //colors: [Colors.blueGrey.shade200, Colors.blueGrey],
+                    colors:[ Color(0xff8CE0B0),
+                      Color(0xff00877F)],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
-                      stops: const [0.1, 0.5],
+                      //stops: [0.1, 0.5],
                       tileMode: TileMode.clamp)),
               labelFormatterCallback: (label) {
                 if (label == "0") {

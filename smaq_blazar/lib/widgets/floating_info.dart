@@ -77,9 +77,9 @@ class _FloatInfoState extends State<FloatInfo> {
                   ),
                 ),
                 const Divider(
-                  color: Colors.black,
+                  color: Color(0xff00877F),
                   height: 8,
-                  thickness: 1,
+                  thickness: 1.5,
                   indent: 0,
                   endIndent: 0,
                 ),
@@ -96,7 +96,7 @@ class _FloatInfoState extends State<FloatInfo> {
                                 style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
+                                  color: Color(0xff00877F),)),
                             Padding(
                               padding: const EdgeInsets.only(left: 4),
                               child:
@@ -110,11 +110,15 @@ class _FloatInfoState extends State<FloatInfo> {
                           ],
                         ),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(
-                              Icons.device_thermostat_outlined,
-                              size: 16,
-                              color: Colors.white,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 2),
+                              child: const Icon(
+                                Icons.device_thermostat_outlined,
+                                size: 16,
+                                color: Color(0xff00877F),
+                              ),
                             ),
                             Text( widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Temperature.toStringAsFixed(2)}ºC": "ERROR",
                                 style: const TextStyle(
@@ -123,11 +127,15 @@ class _FloatInfoState extends State<FloatInfo> {
                           ],
                         ),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(
-                              WeatherIcons.humidity,
-                              size: 16,
-                              color: Colors.white,
+                            const Padding(
+                              padding: EdgeInsets.only(bottom: 6),
+                              child: Icon(
+                                WeatherIcons.humidity,
+                                size: 16,
+                                color: Color(0xff00877F),
+                              ),
                             ),
                             Text(widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Humidity.toStringAsFixed(2)} %": "ERROR",
                                 style: const TextStyle(
@@ -140,7 +148,7 @@ class _FloatInfoState extends State<FloatInfo> {
                             const Icon(
                               Icons.tornado_rounded,
                               size: 16,
-                              color: Colors.white,
+                              color: Color(0xff00877F),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left:4.0),
@@ -166,7 +174,7 @@ class _FloatInfoState extends State<FloatInfo> {
                             style: const TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: Colors.white70,
                             )),
 
                     ],

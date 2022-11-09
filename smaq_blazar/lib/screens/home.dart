@@ -8,6 +8,7 @@ import '../classes/station_model.dart';
 import '../services/Station_service.dart';
 import '../widgets/Icon_map.dart';
 import '../widgets/floating_add.dart';
+import '../widgets/floating_filter.dart';
 import '../widgets/floating_info.dart';
 import 'package:location/location.dart';
 
@@ -42,7 +43,7 @@ class _HomeState extends State<Home> {
   bool addingStation = false;
   bool showingInfo = false;
   bool showingLegend = false;
-
+  bool showingFilter= false;
   /*List<StationModel> StationList = [
     Station("AAD234", "", "", "FOC Wallbox Office", 41.35581, 2.14141, 223,
         25.6, 48.7, 1015.2),
@@ -113,25 +114,20 @@ class _HomeState extends State<Home> {
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: FlutterMap(
-
                 mapController: mapController,
                 options: MapOptions(
-                  onLongPress: (tapPosition, latLng){
-                    setState(() {
-                      stationShown = StationModel(
-                          name: "ERROR",
-                          IDStation: "ERROR",
-                          Description: "ERROR",
-                          lat: 0,
-                          long: 0,
-                          lastData: [],
-                          lastAQI: []);
-
-
-
-
-                    });
-                  },
+                    onLongPress: (tapPosition, latLng) {
+                      setState(() {
+                        stationShown = StationModel(
+                            name: "ERROR",
+                            IDStation: "ERROR",
+                            Description: "ERROR",
+                            lat: 0,
+                            long: 0,
+                            lastData: [],
+                            lastAQI: []);
+                      });
+                    },
                     center: LatLng(markersList[0].point.latitude,
                         markersList[0].point.longitude),
                     minZoom: 2,
@@ -215,11 +211,9 @@ class _HomeState extends State<Home> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           IconButton(
-                              color: (showingInfo && addingStation)
-                                  ? Colors.grey.shade600
-                                  : Colors.black,
+
                               onPressed: () {
-                                if (!addingStation) {
+                                if (!addingStation && !showingFilter) {
                                   setState(() {
                                     if (showingInfo && showingLegend) {
                                       showingInfo = false;
@@ -234,7 +228,10 @@ class _HomeState extends State<Home> {
                                   showingLegend
                                       ? Icons.close_outlined
                                       : Icons.info_outline_rounded,
-                                  size: 30)),
+                                  size: 30,
+                                color: (showingInfo && (showingFilter || addingStation))
+                                    ? Colors.grey.shade600
+                                    : Colors.black,)),
                           IconButton(
                               onPressed: () {
                                 if (!showingInfo) {
@@ -253,17 +250,33 @@ class _HomeState extends State<Home> {
                                       : Colors.black)),
                           IconButton(
                               onPressed: () {
-                                if (!showingInfo) {}
+                                if (!showingLegend && !addingStation) {
+                                  setState(() {
+                                    //Modificamos el estado de showing Info
+                                    if (showingInfo && showingFilter) {
+                                      showingInfo = false;
+                                    } else {
+                                      showingInfo = true;
+                                    }
+                                    showingFilter= !showingFilter;
+                                  });
+                                }
                               },
-                              icon: Icon(Icons.filter_alt_rounded,
+                              icon: Icon(showingFilter
+                                  ? Icons.close_outlined:Icons.filter_alt_rounded,
                                   size: 30,
-                                  color: showingInfo
+                                  color: (showingInfo && (showingLegend || addingStation))
                                       ? Colors.grey.shade600
                                       : Colors.black)),
                           IconButton(
                               onPressed: () async {
                                 if (!showingInfo) {
                                   //We have to refresh the information from the BBDD that we have
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            "Extraïent nova informació dels SMAQ's ...")),
+                                  );
                                   StationsManager stationsManager =
                                       StationsManager();
                                   List<StationModel> listStations =
@@ -273,10 +286,27 @@ class _HomeState extends State<Home> {
                                   if (listStations.isEmpty) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                          content: Text('No hem pogut extreure les dades...')),
+                                          content: Text(
+                                              'No hem pogut extreure les dades...')),
                                     );
                                   } else {
+                                    //We have to search the same Station ID that we have been selected before and reshow
                                     setState(() {
+                                      bool found = false;
+                                      int positionStation = 0;
+                                      while (!found &&
+                                          positionStation <
+                                              listStations.length) {
+                                        if (listStations[positionStation]
+                                                .IDStation ==
+                                            stationShown.IDStation) {
+                                          //We have found the station and we have to refresh the data
+                                          stationShown =
+                                              listStations[positionStation];
+                                          found = true;
+                                        }
+                                        positionStation++;
+                                      }
                                       StationList = listStations;
                                       stationsManager.SaveStations(StationList);
                                     });
@@ -295,7 +325,7 @@ class _HomeState extends State<Home> {
                                       : Colors.black)),
                           IconButton(
                               onPressed: () {
-                                if (!showingLegend) {
+                                if (!showingLegend && !showingFilter) {
                                   setState(() {
                                     if (showingInfo && addingStation) {
                                       showingInfo = false;
@@ -311,7 +341,7 @@ class _HomeState extends State<Home> {
                                       ? Icons.close_outlined
                                       : Icons.add_box_outlined,
                                   size: 30,
-                                  color: (showingInfo && showingLegend)
+                                  color: (showingInfo && (showingLegend || showingFilter))
                                       ? Colors.grey.shade600
                                       : Colors.black)),
                         ],
@@ -320,57 +350,62 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 Align(
-                  alignment: showingInfo? Alignment.topCenter: Alignment.topRight,
+                  alignment:
+                      showingInfo ? Alignment.topCenter : Alignment.topRight,
                   child: Padding(
-                    padding: showingInfo? const EdgeInsets.only(top: 10): const EdgeInsets.only(top: 20, right: 10),
+                    padding: showingInfo
+                        ? const EdgeInsets.only(top: 10)
+                        : const EdgeInsets.only(top: 20, right: 10),
                     child: showingInfo
                         ? (addingStation
                             ? FloatAdd()
                             : showingLegend
                                 ? FloatLegend()
-                                : Container())
-                        :FloatPosition(
-                      isRefresh: false,
-                      functionWhenClicked: () async {
-                        serviceEnabled = await userLocation.serviceEnabled();
-                        if (!serviceEnabled) {
-                          serviceEnabled =
-                          await userLocation.requestService();
-                          if (!serviceEnabled) {
-                            return;
-                          }
-                        }
-                        permissionGranted =
-                        await userLocation.hasPermission();
-                        if (permissionGranted == PermissionStatus.denied) {
-                          permissionGranted =
-                          await userLocation.requestPermission();
-                          if (permissionGranted != PermissionStatus.granted) {
-                            return;
-                          }
-                        }
-                        locationData = await userLocation.getLocation();
+                                : showingFilter ?FloatFilter() :Container())
+                        : FloatPosition(
+                            isRefresh: false,
+                            functionWhenClicked: () async {
+                              serviceEnabled =
+                                  await userLocation.serviceEnabled();
+                              if (!serviceEnabled) {
+                                serviceEnabled =
+                                    await userLocation.requestService();
+                                if (!serviceEnabled) {
+                                  return;
+                                }
+                              }
+                              permissionGranted =
+                                  await userLocation.hasPermission();
+                              if (permissionGranted ==
+                                  PermissionStatus.denied) {
+                                permissionGranted =
+                                    await userLocation.requestPermission();
+                                if (permissionGranted !=
+                                    PermissionStatus.granted) {
+                                  return;
+                                }
+                              }
+                              locationData = await userLocation.getLocation();
 
-                        setState(() {
-                          mapController.move(
-                              LatLng(locationData.latitude!,
-                                  locationData.longitude!),
-                              15);
-                        });
-                      },
-                    ) ,
+                              setState(() {
+                                mapController.move(
+                                    LatLng(locationData.latitude!,
+                                        locationData.longitude!),
+                                    15);
+                              });
+                            },
+                          ),
                   ),
                 ),
               ],
             ),
           ),
         ),
-
         Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
-            padding: const EdgeInsets.only(bottom:(16)),
-            child: showingInfo && !showingLegend
+            padding: const EdgeInsets.only(bottom: (16)),
+            child: showingInfo && addingStation
                 ? Container()
                 : (stationShown.name == "ERROR"
                     ? Container()

@@ -21,7 +21,10 @@ class _DetailStationState extends State<DetailStation> {
     //We have to recover the info from the station
     TimeAnalizer time = TimeAnalizer();
 
-    Object? data = ModalRoute.of(context)?.settings.arguments;
+    Object? data = ModalRoute
+        .of(context)
+        ?.settings
+        .arguments;
     station = data as StationModel;
 
     return Scaffold(
@@ -30,7 +33,9 @@ class _DetailStationState extends State<DetailStation> {
           station.name,
           textAlign: TextAlign.center,
           style: const TextStyle(
-            fontSize: 25,
+            fontSize: 30,
+            color: Colors.black,
+
           ),
         ),
         backgroundColor: Colors.blueGrey.shade200,
@@ -73,13 +78,14 @@ class _DetailStationState extends State<DetailStation> {
                               const Icon(
                                 Icons.device_thermostat_outlined,
                                 size: 20,
-                                color: Colors.black,
+                                color: Color(0xff00877F),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 4),
                                 child: Text(
                                     station.lastData.isNotEmpty
-                                        ? "${station.lastData[0].Temperature.toStringAsFixed(3)} ºC"
+                                        ? "${station.lastData[0].Temperature
+                                        .toStringAsFixed(3)} ºC"
                                         : "ERROR",
                                     style: const TextStyle(
                                         fontSize: 20, color: Colors.white)),
@@ -91,13 +97,14 @@ class _DetailStationState extends State<DetailStation> {
                               const Icon(
                                 WeatherIcons.humidity,
                                 size: 20,
-                                color: Colors.black,
+                                color: Color(0xff00877F),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 6, left: 4),
                                 child: Text(
                                     station.lastData.isNotEmpty
-                                        ? "${station.lastData[0].Humidity.toStringAsFixed(3)} %"
+                                        ? "${station.lastData[0].Humidity
+                                        .toStringAsFixed(3)} %"
                                         : "ERROR",
                                     style: const TextStyle(
                                         fontSize: 20, color: Colors.white)),
@@ -113,13 +120,15 @@ class _DetailStationState extends State<DetailStation> {
                               const Icon(
                                 Icons.tornado_rounded,
                                 size: 20,
-                                color: Colors.black,
+                                //color: Colors.black,
+                                color: Color(0xff00877F),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 4.0),
                                 child: Text(
                                     station.lastData.isNotEmpty
-                                        ? "${station.lastData[0].Pressure.toStringAsFixed(3)} hPa"
+                                        ? "${station.lastData[0].Pressure
+                                        .toStringAsFixed(3)} hPa"
                                         : "ERROR",
                                     style: const TextStyle(
                                         fontSize: 20, color: Colors.white)),
@@ -131,13 +140,14 @@ class _DetailStationState extends State<DetailStation> {
                               const Icon(
                                 WeatherIcons.rain,
                                 size: 20,
-                                color: Colors.black,
+                                color: Color(0xff00877F),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 5, top: 6),
                                 child: Text(
                                     station.lastData.isNotEmpty
-                                        ? "${station.lastData[0].Rain.toStringAsFixed(3)} mm"
+                                        ? "${station.lastData[0].Rain
+                                        .toStringAsFixed(3)} mm"
                                         : "ERROR",
                                     style: const TextStyle(
                                         fontSize: 20, color: Colors.white)),
@@ -151,7 +161,7 @@ class _DetailStationState extends State<DetailStation> {
                 ),
               )),
           const Divider(
-            color: Colors.blueGrey,
+            color: Color(0xff00877F),
             height: 6,
             thickness: 1,
             indent: 8,
@@ -169,9 +179,9 @@ class _DetailStationState extends State<DetailStation> {
                       color: Colors.black)),
               axes: <RadialAxis>[
                 RadialAxis(
-                  startAngle: 140,
+                    startAngle: 140,
                     endAngle: 40,
-                    isInversed:false,
+                    isInversed: false,
                     canScaleToFit: true,
 
                     minimum: 0,
@@ -182,41 +192,43 @@ class _DetailStationState extends State<DetailStation> {
                     ticksPosition: ElementsPosition.outside,
                     radiusFactor: 1,
                     useRangeColorForAxis: true,
+                    canRotateLabels: true,
 
                     ranges: [
                       GaugeRange(
-                          startValue: 0,
-                          endValue: 50,
-                          color: Colors.lightGreen.shade800,
+                        startValue: 0,
+                        endValue: 50,
+                        color: Colors.lightGreen.shade800,
                         startWidth: 16,
                         endWidth: 16,),
                       GaugeRange(
-                          startValue: 51, endValue: 100,
-                          color: Colors.amber,
+                        startValue: 51,
+                        endValue: 100,
+                        color: Colors.amber,
                         startWidth: 16,
                         endWidth: 16,),
                       GaugeRange(
-                          startValue: 101,
-                          endValue: 150,
-                          color: Colors.orange.shade800,
+                        startValue: 101,
+                        endValue: 150,
+                        color: Colors.orange.shade800,
                         startWidth: 16,
                         endWidth: 16,),
                       GaugeRange(
-                          startValue: 151,
-                          endValue: 200,
-                          color: Colors.redAccent.shade700,
+                        startValue: 151,
+                        endValue: 200,
+                        color: Colors.redAccent.shade700,
                         startWidth: 16,
                         endWidth: 16,),
                       GaugeRange(
-                          startValue: 201,
-                          endValue: 300,
-                          color: Colors.pink.shade800,
+                        startValue: 201,
+                        endValue: 300,
+                        color: Colors.pink.shade800,
                         startWidth: 16,
                         endWidth: 16,),
                       GaugeRange(
-                          startValue: 301,
-                          endValue: 400,
-                          color: const Color(0xFF7D0023),
+                        startValue: 301,
+                        endValue: 400,
+                        color: const Color(0xFF7D0023),
                         startWidth: 16,
                         endWidth: 16,
                       ),
@@ -237,14 +249,14 @@ class _DetailStationState extends State<DetailStation> {
                           borderWidth: 0.01,
                         ),
                         tailStyle: const TailStyle(),
-                        animationType: AnimationType.bounceOut,
+                        animationType: AnimationType.ease,
                         animationDuration: 3000,
                       )
                     ],
                     axisLineStyle: AxisLineStyle(
-                      color:Colors.blueGrey.shade200 ,
+                      color: Colors.blueGrey.shade200,
                       thickness: 30,
-                      cornerStyle: CornerStyle.bothCurve,
+                      cornerStyle: CornerStyle.bothFlat,
                     ),
                     annotations: <GaugeAnnotation>[
                       GaugeAnnotation(
@@ -255,7 +267,7 @@ class _DetailStationState extends State<DetailStation> {
                                   color: station.colorAQI(station.getAQI()))),
                           angle: 90,
                           positionFactor: 0.5
-                          )
+                      )
                     ])
               ],
             ),
@@ -276,7 +288,8 @@ class _DetailStationState extends State<DetailStation> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
                     child: Text(
-                        "Nivell de contaminació : ${station.getLevel(station.getAQI())}",
+                        "Nivell de contaminació : ${station.getLevel(
+                            station.getAQI())}",
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -292,7 +305,7 @@ class _DetailStationState extends State<DetailStation> {
             ),
           ),
           const Divider(
-            color: Colors.blueGrey,
+            color: Color(0xff00877F),
             height: 4,
             thickness: 1.2,
             indent: 8,
@@ -335,7 +348,7 @@ class _DetailStationState extends State<DetailStation> {
                               shape: BoxShape.circle,
                               color: station.lastAQI.isNotEmpty
                                   ? station.colorAQI(station.lastAQI[3])
-                                  : Colors.blueGrey,
+                                  : Color(0xff00877F),
                               border: Border.all(width: 1, color: Colors.black),
                             ),
                           ),
@@ -350,14 +363,15 @@ class _DetailStationState extends State<DetailStation> {
                                         fontSize: 20,
                                         color: station.lastAQI.isNotEmpty
                                             ? station
-                                                .colorAQI(station.lastAQI[3])
+                                            .colorAQI(station.lastAQI[3])
                                             : Colors.blueGrey,
                                       )),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Text(
                                         station.lastData.isNotEmpty
-                                            ? "${station.lastData[0].CxCO.toStringAsFixed(3)} ppm"
+                                            ? "${station.lastData[0].CxCO
+                                            .toStringAsFixed(3)} ppm"
                                             : "NO DATA",
                                         style: const TextStyle(
                                           fontSize: 15,
@@ -381,9 +395,9 @@ class _DetailStationState extends State<DetailStation> {
                                 shape: BoxShape.circle,
                                 color: station.lastAQI.isNotEmpty
                                     ? station.colorAQI(station.lastAQI[5])
-                                    : Colors.blueGrey,
+                                    : Color(0xff00877F),
                                 border:
-                                    Border.all(width: 1, color: Colors.black),
+                                Border.all(width: 1, color: Colors.black),
                               ),
                             ),
                             Flexible(
@@ -397,14 +411,15 @@ class _DetailStationState extends State<DetailStation> {
                                           fontSize: 20,
                                           color: station.lastAQI.isNotEmpty
                                               ? station
-                                                  .colorAQI(station.lastAQI[5])
+                                              .colorAQI(station.lastAQI[5])
                                               : Colors.blueGrey,
                                         )),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 4),
                                       child: Text(
                                           station.lastData.isNotEmpty
-                                              ? "${station.lastData[0].CxNO2.toStringAsFixed(3)} ppm"
+                                              ? "${station.lastData[0].CxNO2
+                                              .toStringAsFixed(3)} ppm"
                                               : "NO DATA",
                                           style: const TextStyle(
                                             fontSize: 15,
@@ -427,7 +442,7 @@ class _DetailStationState extends State<DetailStation> {
                               shape: BoxShape.circle,
                               color: station.lastAQI.isNotEmpty
                                   ? station.colorAQI(station.lastAQI[0])
-                                  : Colors.blueGrey,
+                                  : Color(0xff00877F),
                               border: Border.all(width: 1, color: Colors.black),
                             ),
                           ),
@@ -442,14 +457,15 @@ class _DetailStationState extends State<DetailStation> {
                                         fontSize: 20,
                                         color: station.lastAQI.isNotEmpty
                                             ? station
-                                                .colorAQI(station.lastAQI[0])
+                                            .colorAQI(station.lastAQI[0])
                                             : Colors.blueGrey,
                                       )),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Text(
                                         station.lastData.isNotEmpty
-                                            ? "${station.lastData[0].CxO3.toStringAsFixed(3)} ppm"
+                                            ? "${station.lastData[0].CxO3
+                                            .toStringAsFixed(3)} ppm"
                                             : "NO DATA",
                                         style: const TextStyle(
                                           fontSize: 15,
@@ -473,9 +489,9 @@ class _DetailStationState extends State<DetailStation> {
                                 shape: BoxShape.circle,
                                 color: station.lastAQI.isNotEmpty
                                     ? station.colorAQI(station.lastAQI[4])
-                                    : Colors.blueGrey,
+                                    : Color(0xff00877F),
                                 border:
-                                    Border.all(width: 1, color: Colors.black),
+                                Border.all(width: 1, color: Colors.black),
                               ),
                             ),
                             Flexible(
@@ -489,14 +505,15 @@ class _DetailStationState extends State<DetailStation> {
                                           fontSize: 20,
                                           color: station.lastAQI.isNotEmpty
                                               ? station
-                                                  .colorAQI(station.lastAQI[4])
+                                              .colorAQI(station.lastAQI[4])
                                               : Colors.blueGrey,
                                         )),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 4),
                                       child: Text(
                                           station.lastData.isNotEmpty
-                                              ? "${station.lastData[0].CxSO2.toStringAsFixed(3)} ppm"
+                                              ? "${station.lastData[0].CxSO2
+                                              .toStringAsFixed(3)} ppm"
                                               : "NO DATA",
                                           style: const TextStyle(
                                             fontSize: 15,
@@ -515,7 +532,7 @@ class _DetailStationState extends State<DetailStation> {
                 ),
               )),
           const Divider(
-            color: Colors.blueGrey,
+            color: Color(0xff00877F),
             height: 4,
             thickness: 1.2,
             indent: 8,
@@ -558,7 +575,7 @@ class _DetailStationState extends State<DetailStation> {
                               shape: BoxShape.circle,
                               color: station.lastAQI.isNotEmpty
                                   ? station.colorAQI(station.lastAQI[1])
-                                  : Colors.blueGrey,
+                                  : Color(0xff00877F),
                               border: Border.all(width: 1, color: Colors.black),
                             ),
                           ),
@@ -573,14 +590,15 @@ class _DetailStationState extends State<DetailStation> {
                                         fontSize: 20,
                                         color: station.lastAQI.isNotEmpty
                                             ? station
-                                                .colorAQI(station.lastAQI[1])
+                                            .colorAQI(station.lastAQI[1])
                                             : Colors.blueGrey,
                                       )),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Text(
                                         station.lastData.isNotEmpty
-                                            ? "${station.lastData[0].PM25} ug/m3"
+                                            ? "${station.lastData[0]
+                                            .PM25} ug/m3"
                                             : "NO DATA",
                                         style: const TextStyle(
                                           fontSize: 15,
@@ -604,9 +622,9 @@ class _DetailStationState extends State<DetailStation> {
                                 shape: BoxShape.circle,
                                 color: station.lastAQI.isNotEmpty
                                     ? station.colorAQI(station.lastAQI[2])
-                                    : Colors.blueGrey,
+                                    : Color(0xff00877F),
                                 border:
-                                    Border.all(width: 1, color: Colors.black),
+                                Border.all(width: 1, color: Colors.black),
                               ),
                             ),
                             Flexible(
@@ -620,14 +638,15 @@ class _DetailStationState extends State<DetailStation> {
                                           fontSize: 20,
                                           color: station.lastAQI.isNotEmpty
                                               ? station
-                                                  .colorAQI(station.lastAQI[2])
+                                              .colorAQI(station.lastAQI[2])
                                               : Colors.blueGrey,
                                         )),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 4),
                                       child: Text(
                                           station.lastData.isNotEmpty
-                                              ? "${station.lastData[0].PM10} ug/m3"
+                                              ? "${station.lastData[0]
+                                              .PM10} ug/m3"
                                               : "NO DATA",
                                           style: const TextStyle(
                                             fontSize: 15,
@@ -646,7 +665,7 @@ class _DetailStationState extends State<DetailStation> {
                 ),
               )),
           const Divider(
-            color: Colors.blueGrey,
+            color: Color(0xff00877F),
             height: 4,
             thickness: 1.2,
             indent: 8,
@@ -684,39 +703,47 @@ class _DetailStationState extends State<DetailStation> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Icon(WeatherIcons.day_sunny,
-                              size: 20, color: Colors.black),
+                            size: 20, color: Color(0xff00877F),),
                           Flexible(
                             child: Padding(
                               padding: const EdgeInsets.only(left: 8, top: 4),
                               child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text("UV",
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children:
+                                  station.lastData.isNotEmpty
+                                      ? ([ const Text("UV",
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: Colors.black,
-                                      )),
-                                  Text(
-                                      station.lastData.isNotEmpty
-                                          ? " ${station.lastData[0].UVSource}: "
-                                          : "NO DATA",
+                                      )), Text(
+                                      " ${station.lastData[0].UVSource}: ",
                                       style: const TextStyle(
                                         fontSize: 20,
                                         color: Colors.black,
                                       )),
-                                  Text(
-                                      station.lastData.isNotEmpty
-                                          ? "${station.lastData[0].UV} (${station.colorUV(station.lastData[0].UV)[1]})"
-                                          : "NO DATA",
+                                    Text(
+                                        "${station.lastData[0].UV} (${station
+                                            .colorUV(
+                                            station.lastData[0].UV)[1]})",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: station.colorUV(
+                                              station.lastData[0].UV)[0]
+
+                                        ))
+                                  ]) : ([
+                                    const Text("UV X:",
                                       style: TextStyle(
-                                        fontSize: 20,
-                                        color: station.lastData.isNotEmpty
-                                            ? station.colorUV(
-                                                station.lastData[0].UV)[0]
-                                            : Colors.blueGrey,
-                                      ))
-                                ],
-                              ),
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                      )),
+                                      const Text(
+                                        " NO DATA",
+                                      style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.blueGrey,))])
+
+                            ),
                             ),
                           ),
                         ],
@@ -729,7 +756,7 @@ class _DetailStationState extends State<DetailStation> {
                             const Icon(
                               Icons.graphic_eq_outlined,
                               size: 20,
-                              color: Colors.black,
+                              color: Color(0xff00877F),
                             ),
                             Flexible(
                               child: Padding(
@@ -751,99 +778,99 @@ class _DetailStationState extends State<DetailStation> {
                       ),
                       Padding(
                         padding:
-                            const EdgeInsets.only(left: 32, top: 2, bottom: 8),
+                        const EdgeInsets.only(left: 32, top: 2, bottom: 8),
                         child: station.lastData.isNotEmpty
                             ? FittedBox(
-                              fit: BoxFit.fitWidth,
-                              child: Row(
-                                  children: [
-                                    Text(
-                                        station.lastData.isNotEmpty
-                                            ? "("
-                                            : "NO DATA",
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                        )),
-                                    Text(
-                                        station.lastData.isNotEmpty
-                                            ? "R: ${station.lastData[0].RedLux}"
-                                            : "NO DATA",
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.red,
-                                        )),
-                                    Text(
-                                        station.lastData.isNotEmpty
-                                            ? ","
-                                            : "NO DATA",
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                        )),
-                                    Text(
-                                        station.lastData.isNotEmpty
-                                            ? "G: ${station.lastData[0].GreenLux}"
-                                            : "NO DATA",
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.green,
-                                        )),
-                                    Text(
-                                        station.lastData.isNotEmpty
-                                            ? ","
-                                            : "NO DATA",
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                        )),
-                                    Text(
-                                        station.lastData.isNotEmpty
-                                            ? "B: ${station.lastData[0].BlueLux}"
-                                            : "NO DATA",
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.blue,
-                                        )),
-                                    Text(
-                                        station.lastData.isNotEmpty
-                                            ? ","
-                                            : "NO DATA",
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                        )),
-                                    Text(
-                                        station.lastData.isNotEmpty
-                                            ? "IR: ${station.lastData[0].IR}"
-                                            : "NO DATA",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.redAccent.shade700,
-                                        )),
-                                    Text(
-                                        station.lastData.isNotEmpty
-                                            ? ")"
-                                            : "NO DATA",
-                                        style: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                        )),
-                                  ],
-                                ),
-                            )
+                          fit: BoxFit.fitWidth,
+                          child: Row(
+                            children: [
+                              Text(
+                                  station.lastData.isNotEmpty
+                                      ? "("
+                                      : "NO DATA",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  )),
+                              Text(
+                                  station.lastData.isNotEmpty
+                                      ? "R: ${station.lastData[0].RedLux}"
+                                      : "NO DATA",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.red,
+                                  )),
+                              Text(
+                                  station.lastData.isNotEmpty
+                                      ? ","
+                                      : "NO DATA",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  )),
+                              Text(
+                                  station.lastData.isNotEmpty
+                                      ? "G: ${station.lastData[0].GreenLux}"
+                                      : "NO DATA",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.green,
+                                  )),
+                              Text(
+                                  station.lastData.isNotEmpty
+                                      ? ","
+                                      : "NO DATA",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  )),
+                              Text(
+                                  station.lastData.isNotEmpty
+                                      ? "B: ${station.lastData[0].BlueLux}"
+                                      : "NO DATA",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.blue,
+                                  )),
+                              Text(
+                                  station.lastData.isNotEmpty
+                                      ? ","
+                                      : "NO DATA",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  )),
+                              Text(
+                                  station.lastData.isNotEmpty
+                                      ? "IR: ${station.lastData[0].IR}"
+                                      : "NO DATA",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.redAccent.shade700,
+                                  )),
+                              Text(
+                                  station.lastData.isNotEmpty
+                                      ? ")"
+                                      : "NO DATA",
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                  )),
+                            ],
+                          ),
+                        )
                             : const Text("NO DATA",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                )),
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.black,
+                            )),
                       )
                     ],
                   ),
                 ),
               )),
           const Divider(
-            color: Colors.blueGrey,
+            color: Color(0xff00877F),
             height: 4,
             thickness: 1.2,
             indent: 8,
@@ -881,7 +908,7 @@ class _DetailStationState extends State<DetailStation> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Icon(Icons.music_note_outlined,
-                              size: 20, color: Colors.black),
+                              size: 20,  color: Color(0xff00877F),),
                           Flexible(
                             child: Padding(
                               padding: const EdgeInsets.only(left: 8, top: 4),
@@ -912,7 +939,7 @@ class _DetailStationState extends State<DetailStation> {
                 ),
               )),
           const Divider(
-            color: Colors.blueGrey,
+            color: Color(0xff00877F),
             height: 4,
             thickness: 1.2,
             indent: 8,
@@ -929,38 +956,38 @@ class _DetailStationState extends State<DetailStation> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 4),
-                      child: ElevatedButton(onPressed: (){
-                        //Navigate to page graphics
-                        Navigator.pushNamed(context,'/graphs_station',
-                            arguments: station );
-
-                      }, child: const Text("Gràfiques",style: TextStyle(fontSize: 16))),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 4),
+                        child: ElevatedButton(onPressed: () {
+                          //Navigate to page graphics
+                          Navigator.pushNamed(context, '/graphs_station',
+                              arguments: station);
+                        }, child: const Text("Gràfiques", style: TextStyle(
+                            fontSize: 16))),
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left:4),
-                      child: ElevatedButton(onPressed: (){
-                        //Navigate to page Evolution
-                        Navigator.pushNamed(context,'/evolution_station',
-                            arguments: station );
-
-                      }, child: const Text("Evolució AQI", style: TextStyle(fontSize: 16),),),
-                    ),
-                  )
-                ],
-              )
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 4),
+                        child: ElevatedButton(onPressed: () {
+                          //Navigate to page Evolution
+                          Navigator.pushNamed(context, '/evolution_station',
+                              arguments: station);
+                        }, child: const Text("Evolució AQI", style: TextStyle(
+                            fontSize: 16),),),
+                      ),
+                    )
+                  ],
+                )
             ),
           ),
 
           const Divider(
-            color: Colors.blueGrey,
+            color: Color(0xff00877F),
             height: 4,
             thickness: 1.2,
             indent: 8,
@@ -973,7 +1000,7 @@ class _DetailStationState extends State<DetailStation> {
                   style: const TextStyle(
                       fontSize: 15,
                       //fontWeight: FontWeight.bold,
-                      color: Colors.blueGrey)),
+                    color: Color(0xff00877F),)),
             ),
           ),
           Padding(
@@ -981,16 +1008,17 @@ class _DetailStationState extends State<DetailStation> {
             child: Center(
               child: Text(
                   station.lastData.isNotEmpty
-                      ? time.getActualizationTime(station.lastData[0].CreationDate)
+                      ? time.getActualizationTime(
+                      station.lastData[0].CreationDate)
                       : "NO DATA",
                   style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blueGrey)),
+                      color: Color(0xff00877F),)),
             ),
           ),
           const Divider(
-            color: Colors.blueGrey,
+            color: Color(0xff00877F),
             height: 8,
             thickness: 1.2,
             indent: 8,
