@@ -8,7 +8,8 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 class FloatFilter extends StatefulWidget {
-  FloatFilter({super.key});
+  Function (int filter) functionWhenFilterChanged;
+ FloatFilter({super.key, required this.functionWhenFilterChanged});
 
   @override
   State<FloatFilter> createState() => _FloatFilterState();
@@ -18,7 +19,7 @@ class _FloatFilterState extends State<FloatFilter> {
   String selectedMethod = "Únic";
   List<String> methods = ['Multiple', 'Únic'];
   double pollutantsToShow = 0;
-  bool multiplePollutantsChanged = false;
+  bool pollutantsChanged = false;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +109,7 @@ class _FloatFilterState extends State<FloatFilter> {
                         labelPosition: LinearLabelPosition.inside,
                         minimum: 0,
                         maximum: 5,
-                        axisTrackExtent: 4,
+                        axisTrackExtent: 15,
                         animateAxis: true,
                         showTicks: true,
                         maximumLabels: 5,
@@ -131,7 +132,7 @@ class _FloatFilterState extends State<FloatFilter> {
                                   Colors.orange.shade800,
                                   Colors.redAccent.shade700,
                                   Colors.pink.shade800,
-                                  Color(0xFF7D0023)
+                                  const Color(0xFF7D0023)
                                 ],
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
@@ -158,8 +159,8 @@ class _FloatFilterState extends State<FloatFilter> {
                         markerPointers: [
                           LinearWidgetPointer(
                               value: pollutantsToShow.toDouble(),
-                              offset: 0,
-                              markerAlignment: LinearMarkerAlignment.end,
+                              offset: -8,
+                              markerAlignment: LinearMarkerAlignment.center,
                               dragBehavior:
                                   LinearMarkerDragBehavior.constrained,
                               onChanged: (newValue) {
@@ -171,13 +172,13 @@ class _FloatFilterState extends State<FloatFilter> {
                                 setState(() {
                                   pollutantsToShow =
                                       (newValue.round()).toDouble();
-                                  multiplePollutantsChanged = true;
                                 });
+                                widget.functionWhenFilterChanged(newValue.round());
                               },
                               position: LinearElementPosition.cross,
                               child: const Padding(
-                                padding: const EdgeInsets.only(bottom: 10),
-                                child: const Icon(
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: Icon(
                                   WeatherIcons.smoke,
                                   size: 28,
                                   color: Colors.black,

@@ -69,7 +69,7 @@ class _FloatInfoState extends State<FloatInfo> {
                           child: Text(widget.station.name,
                               style: const TextStyle(
                                 fontSize: 15,
-                                color: Colors.black,
+                                color: Colors.white,
                               )),
                         ),
                       ),
@@ -92,19 +92,27 @@ class _FloatInfoState extends State<FloatInfo> {
                       children: [
                         Row(
                           children: [
-                            const Text("AQI",
+                            /*const Text("AQI",
                                 style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                  color: Color(0xff00877F),)),
+                                  color: Color(0xff00877F),)),*/
+                            const Padding(
+                              padding: const EdgeInsets.only(bottom: 2),
+                              child: const Icon(
+                                WeatherIcons.smoke,
+                                size: 18,
+                                color: Color(0xff00877F),
+                              ),
+                            ),
                             Padding(
                               padding: const EdgeInsets.only(left: 4),
                               child:
-                              Text(widget.station.getAQI()!=-1 ? widget.station.getAQI().toString(): "X",
+                              Text(widget.station.getAQI()!=-1 ? widget.station.getAQI().toString(): "---",
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color: widget.AqiColor,
+                                    color:widget.station.getAQI()!=-1 ? widget.AqiColor: Colors.white,
                                   )),
                             ),
                           ],
@@ -120,7 +128,7 @@ class _FloatInfoState extends State<FloatInfo> {
                                 color: Color(0xff00877F),
                               ),
                             ),
-                            Text( widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Temperature.toStringAsFixed(2)}ºC": "ERROR",
+                            Text( widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Temperature.toStringAsFixed(2)}ºC": "---",
                                 style: const TextStyle(
                                   fontSize: 16,
                                 )),
@@ -137,7 +145,7 @@ class _FloatInfoState extends State<FloatInfo> {
                                 color: Color(0xff00877F),
                               ),
                             ),
-                            Text(widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Humidity.toStringAsFixed(2)} %": "ERROR",
+                            Text(widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Humidity.toStringAsFixed(2)} %": "---",
                                 style: const TextStyle(
                                   fontSize: 16,
                                 )),
@@ -152,7 +160,7 @@ class _FloatInfoState extends State<FloatInfo> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left:4.0),
-                              child: Text(widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Pressure.toStringAsFixed(2)} hPa": "ERROR",
+                              child: Text(widget.station.lastData.isNotEmpty ? "${widget.station.lastData[0].Pressure.toStringAsFixed(2)} hPa": "---",
                                   style: const TextStyle(
                                     fontSize: 16,
                                   )),

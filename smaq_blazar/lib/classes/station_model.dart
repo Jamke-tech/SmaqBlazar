@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -353,6 +354,7 @@ class StationModel {
     }
     return limitsPM10;
   }
+
   List<double> getLimitsCO(double Cx) {
     List<double> limitsPM10 = [];
     if (Cx <= 4.4) {
@@ -414,7 +416,7 @@ class StationModel {
   }
 
   List<int> getAQIListFromCx(List<double> averageCxFromData) {
-   // In order : 03 (8h) / PM25 (3h)  / PM10 (3h) / CO (8h) / SO2 (1h) / NO2 (1h)
+    // In order : 03 (8h) / PM25 (3h)  / PM10 (3h) / CO (8h) / SO2 (1h) / NO2 (1h)
     List<int> AQIFinal = []; // In order : 03 / PM25 / PM10 / CO / SO2 / NO2
 
     if (averageCxFromData.isNotEmpty) {
@@ -442,24 +444,59 @@ class StationModel {
       //We need to multiply by 1000 as the computing of AQI is in ppb
       //Computing AQI level from SO2
       List<double> limitsSO2 = getLimitsSO2(averageCxFromData[4] * 1000);
-      AQIFinal.add(computeAqiFromLimits(limitsSO2, averageCxFromData[4] * 1000));
+      AQIFinal.add(
+          computeAqiFromLimits(limitsSO2, averageCxFromData[4] * 1000));
 
       //Computing AQI level from NO2
       List<double> limitsNO2 = getLimitsNO2(averageCxFromData[5] * 1000);
-      AQIFinal.add(computeAqiFromLimits(limitsNO2, averageCxFromData[5] * 1000));
-
-
+      AQIFinal.add(
+          computeAqiFromLimits(limitsNO2, averageCxFromData[5] * 1000));
 
       return AQIFinal;
     } else {
       return [];
     }
+  }
 
+  double computeDewPoint(double temp, double humidity) {
+    double a = 17.27;
+    double b = 237.7;
 
+    double F = ((a * temp) / (b + temp)) + log((humidity / 100));
+    double dewPoint = ((b * F) / (a - F));
+    return dewPoint;
+  }
 
-
-
-
-
+  List<double> computeMaxAndMinFromData(String data) {
+    int i = 0;
+    double max;
+    double min;
+    if (data == "Temp") {
+      max = lastData[0].Temperature;
+      min = max;
+      while (i < lastData.length) {
+        if (lastData[i].Temperature > max) {
+          max = lastData[i].Temperature;
+        }
+        if (lastData[i].Temperature < min) {
+          min = lastData[i].Temperature;
+        }
+        i++;
+      }
+      return [min, max];
+    } else {
+      max = lastData[0].Humidity;
+      min = max;
+      while (i < lastData.length) {
+        if (lastData[i].Humidity > max) {
+          max = lastData[i].Humidity;
+        }
+        if (lastData[i].Humidity < min) {
+          min = lastData[i].Humidity;
+        }
+        i++;
+      }
+      return [min, max];
+    }
   }
 }

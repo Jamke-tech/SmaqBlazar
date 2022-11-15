@@ -44,16 +44,7 @@ class _HomeState extends State<Home> {
   bool showingInfo = false;
   bool showingLegend = false;
   bool showingFilter= false;
-  /*List<StationModel> StationList = [
-    Station("AAD234", "", "", "FOC Wallbox Office", 41.35581, 2.14141, 223,
-        25.6, 48.7, 1015.2),
-    Station("AAD256", "", "", "Castell de Montjüic", 41.364879, 2.148868, 15,
-        25.4, 49, 1014.2),
-    Station("AAD523", "", "", "D26 Wallbox Factory", 41.32723, 2.12849, 110, 27,
-        52.6, 1015.7),
-    Station("AAD598", "", "", "Plaça Espanya", 41.37505, 2.14922, 172, 28, 51.5,
-        1013.8)
-  ];*/
+
 
   List<StationModel> StationList = [];
 
@@ -136,12 +127,7 @@ class _HomeState extends State<Home> {
                     plugins: [
                       MarkerClusterPlugin(),
                     ]),
-                /*nonRotatedChildren: [
-              AttributionWidget.defaultWidget(
-                source: 'OpenStreetMap contributors',
-                onSourceTapped: null,
-              ),
-            ],*/
+
                 layers: [
                   TileLayerOptions(
                     urlTemplate: satellite
@@ -151,12 +137,12 @@ class _HomeState extends State<Home> {
                     retinaMode: true,
                   ),
                   MarkerClusterLayerOptions(
-                    maxClusterRadius: 120,
+                    maxClusterRadius: 60,
                     size: Size(30, 30),
                     fitBoundsOptions: FitBoundsOptions(
                       padding: EdgeInsets.all(40),
                     ),
-                    //TODO This List is the stations list from the server ( Only get the near ones)
+
                     markers: markersList,
 
                     builder: (context, markers) {
@@ -361,7 +347,25 @@ class _HomeState extends State<Home> {
                             ? FloatAdd()
                             : showingLegend
                                 ? FloatLegend()
-                                : showingFilter ?FloatFilter() :Container())
+                                : showingFilter ?FloatFilter(functionWhenFilterChanged: (int Filter) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    },) :Container())
                         : FloatPosition(
                             isRefresh: false,
                             functionWhenClicked: () async {

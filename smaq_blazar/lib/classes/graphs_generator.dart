@@ -255,7 +255,7 @@ class GraphsGenerator {
     //We add a 20% margin for maximum value
     double maxRealY;
     if(maxY*1.2 > maxY+2){
-       maxRealY= (maxY).toInt().toDouble() +5;
+       maxRealY= (maxY).toInt().toDouble() +6;
     }else{
       maxRealY = (maxY*1.2).toInt().toDouble()  ;
     }
@@ -266,7 +266,7 @@ class GraphsGenerator {
 
 
     if(maxRealY<=4){
-      maxRealY=5.0;
+      maxRealY=6.0;
     }
     return maxRealY;
 
@@ -286,7 +286,7 @@ class GraphsGenerator {
 
     //We refactor the value to not be the maximum
     //We add a 20% margin for maximum value
-    double minRealY = (minY).toInt().toDouble() -1;
+    double minRealY = (minY).toInt().toDouble() -2;
     if(minRealY<0){
       minRealY=0.0;
     }

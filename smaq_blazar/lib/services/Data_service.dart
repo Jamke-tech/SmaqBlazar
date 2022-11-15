@@ -56,8 +56,8 @@ class DataManager {
         var realResponse = await http.Response.fromStream(response);
         List<dynamic> listDocs = jsonDecode(realResponse.body)["documents"];
 
-        print(listDocs[0].toString());
-        print("DOCS: ${listDocs.length}");
+        //print(listDocs[0].toString());
+        //print("DOCS: ${listDocs.length}");
         //print(listDocs[0]);
         if(listDocs.isNotEmpty){
 
