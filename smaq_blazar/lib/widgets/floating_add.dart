@@ -4,8 +4,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
-import '../classes/data_model.dart';
-import '../classes/station_model.dart';
+import '../classes/Model/data_model.dart';
+import '../classes/Model/station_model.dart';
 import '../services/Station_service.dart';
 
 class FloatAdd extends StatefulWidget {

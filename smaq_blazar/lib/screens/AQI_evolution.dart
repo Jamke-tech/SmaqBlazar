@@ -1,5 +1,5 @@
-import 'package:SMAQ/classes/evolution_model.dart';
-import 'package:SMAQ/classes/station_model.dart';
+import 'package:SMAQ/classes/Model/evolution_model.dart';
+import 'package:SMAQ/classes/Model/station_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';

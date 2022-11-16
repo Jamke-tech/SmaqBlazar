@@ -1,6 +1,6 @@
 import 'package:SMAQ/classes/Time.dart';
 import 'package:SMAQ/classes/graphs_generator.dart';
-import 'package:SMAQ/classes/station_model.dart';
+import 'package:SMAQ/classes/Model/station_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

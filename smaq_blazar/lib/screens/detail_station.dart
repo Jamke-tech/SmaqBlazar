@@ -1,4 +1,4 @@
-import 'package:SMAQ/classes/station_model.dart';
+import 'package:SMAQ/classes/Model/station_model.dart';
 import 'package:flutter/material.dart';
 
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -435,14 +435,7 @@ class _DetailStationState extends State<DetailStation> {
               ],
             ),
           ),
-          /*const Padding(
-            padding: EdgeInsets.fromLTRB(8.0,0,8,8),
-            child: Text("Advertències médiques: ",
-                style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black)),
-          ),*/
+
           Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 0, 8, 16),
             child: Center(

@@ -1,3 +1,4 @@
+import 'package:SMAQ/classes/Model/all_state.dart';
 import 'package:http/http.dart' as http;
 import 'package:location_platform_interface/location_platform_interface.dart';
 import 'dart:convert';
@@ -8,76 +9,16 @@ import '../classes/Model/station_model.dart';
 import 'Data_service.dart';
 import 'package:location/location.dart';
 
-class StationsManager {
-  static final StationsManager _instance = StationsManager._internal();
-
-  factory StationsManager() {
-    return _instance;
-  }
-
-  StationsManager._internal() {
-    // initialization logic
-  }
-
-  //Recuperem els endpoints de la clase
-  Endpoints endpoints = Endpoints();
-
-  List<StationModel> listOfStations= [];
-  late LocationData locationUser;
+class FlightService{
+  //Service to get Flight information from Open Sky
 
 
-  Future<void> SaveStations(List<StationModel> stations) async {
-    listOfStations=stations;
-  }
-
-  //Function to create a new Station
-  Future<bool> insertStation(StationModel station) async {
-    try {
-      print(station.IDStation);
-      var headers = {
-        'Content-Type': 'application/json',
-        'api-key':
-            'MZpxcJNBp1UMJ8JGdnbH5lhR7sAt3CEiREyVlyfEjFkZBD6vuhE960x9TmQD5GHs'
-      };
-      var request = http.Request(
-          'POST',
-          Uri.parse(
-              'https://data.mongodb-api.com/app/data-ugjsw/endpoint/data/v1/action/insertOne'));
-      request.body = json.encode({
-        "dataSource": endpoints.MongoDbCluster,
-        "database": endpoints.DataBaseName,
-        "collection": endpoints.MongoDbCollectionStations,
-        "document": {
-          "StationID": station.IDStation,
-          "name": station.name,
-          "description": station.Description,
-          "lat": station.lat,
-          "long": station.long,
-        }
-      });
-      request.headers.addAll(headers);
-
-      http.StreamedResponse response = await request.send();
-
-      print(response.statusCode);
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        //Station upload correctly
-        return false;
-      } else {
-        return true;
-      }
-    } catch (error) {
-      print(error);
-      return true;
-    }
-  }
-
-  Future<List<StationModel>> getAllStationsWithLastData() async {
+  /*Future<List<AllState>> getAllStationsWithLastData() async {
     try {
       var headers = {
         'Content-Type': 'application/json',
         'api-key':
-            'MZpxcJNBp1UMJ8JGdnbH5lhR7sAt3CEiREyVlyfEjFkZBD6vuhE960x9TmQD5GHs'
+        'MZpxcJNBp1UMJ8JGdnbH5lhR7sAt3CEiREyVlyfEjFkZBD6vuhE960x9TmQD5GHs'
       };
       var request = http.Request(
           'POST',
@@ -106,7 +47,7 @@ class StationsManager {
         for (var station in StationList) {
           //print("Station number: ${station["StationID"]}");
           List<DataStation> dataForThatStation =
-              await dataManager.getDataStation(station["StationID"]);
+          await dataManager.getDataStation(station["StationID"]);
           //print(dataForThatStation);
 
           StationModel stationModel = StationModel(
@@ -138,9 +79,17 @@ class StationsManager {
       print(error);
       return [];
     }
-  }
+  }*/
 
-  saveLocation(LocationData locationData) {
-    locationUser=locationData;
-  }
+
+
+
+
+
+
+
+
+
+
+
 }

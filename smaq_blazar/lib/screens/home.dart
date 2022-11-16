@@ -3,8 +3,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 
-import '../classes/data_model.dart';
-import '../classes/station_model.dart';
+import '../classes/Model/data_model.dart';
+import '../classes/Model/station_model.dart';
 import '../services/Station_service.dart';
 import '../widgets/Icon_map.dart';
 import '../widgets/floating_add.dart';
@@ -23,6 +23,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late LocationData locationData;
   late bool serviceEnabled;
+  bool planeClicked = false;
   late PermissionStatus permissionGranted;
   Location userLocation = Location();
   MapController mapController = MapController();
@@ -138,8 +139,8 @@ class _HomeState extends State<Home> {
                   ),
                   MarkerClusterLayerOptions(
                     maxClusterRadius: 60,
-                    size: Size(30, 30),
-                    fitBoundsOptions: FitBoundsOptions(
+                    size: const Size(30, 30),
+                    fitBoundsOptions: const FitBoundsOptions(
                       padding: EdgeInsets.all(40),
                     ),
 
@@ -348,57 +349,67 @@ class _HomeState extends State<Home> {
                             : showingLegend
                                 ? FloatLegend()
                                 : showingFilter ?FloatFilter(functionWhenFilterChanged: (int Filter) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     },) :Container())
                         : FloatPosition(
-                            isRefresh: false,
-                            functionWhenClicked: () async {
+                        isPlaneOff: true,
+                          isPlane: false,
+                          functionWhenClicked: () async {
+                            serviceEnabled =
+                            await userLocation.serviceEnabled();
+                            if (!serviceEnabled) {
                               serviceEnabled =
-                                  await userLocation.serviceEnabled();
+                              await userLocation.requestService();
                               if (!serviceEnabled) {
-                                serviceEnabled =
-                                    await userLocation.requestService();
-                                if (!serviceEnabled) {
-                                  return;
-                                }
+                                return;
                               }
+                            }
+                            permissionGranted =
+                            await userLocation.hasPermission();
+                            if (permissionGranted ==
+                                PermissionStatus.denied) {
                               permissionGranted =
-                                  await userLocation.hasPermission();
-                              if (permissionGranted ==
-                                  PermissionStatus.denied) {
-                                permissionGranted =
-                                    await userLocation.requestPermission();
-                                if (permissionGranted !=
-                                    PermissionStatus.granted) {
-                                  return;
-                                }
+                              await userLocation.requestPermission();
+                              if (permissionGranted !=
+                                  PermissionStatus.granted) {
+                                return;
                               }
-                              locationData = await userLocation.getLocation();
+                            }
+                            locationData = await userLocation.getLocation();
 
+                            setState(() {
+                              mapController.move(
+                                  LatLng(locationData.latitude!,
+                                      locationData.longitude!),
+                                  15);
+                            });
+                          },
+                        )
+                  ),
+                ),
+                Align(
+                  alignment:
+                  showingInfo ? Alignment.topCenter : Alignment.topRight,
+                  child: Padding(
+                      padding: showingInfo
+                          ? const EdgeInsets.only(top: 10)
+                          : const EdgeInsets.only(top: 10, right: 10),
+                      child: showingInfo
+                          ? (addingStation
+                          ? Container()
+                          : showingLegend
+                          ? Container()
+                          : showingFilter ?FloatFilter(functionWhenFilterChanged: (int Filter) {
+                      },) :Container())
+                          : FloatPosition(
+                            isPlaneOff: planeClicked,
+                            isPlane: true,
+                            functionWhenClicked: () async {
                               setState(() {
-                                mapController.move(
-                                    LatLng(locationData.latitude!,
-                                        locationData.longitude!),
-                                    15);
+                                planeClicked = !planeClicked;
                               });
+                              //TODO: Function to show and unshow the airplanes on the screen
                             },
-                          ),
+                          )
                   ),
                 ),
               ],
@@ -415,8 +426,8 @@ class _HomeState extends State<Home> {
                     ? Container()
                     : FloatInfo(
                         station: stationShown,
-                        boxcolor: Colors.blueGrey.shade200,
-                        AqiColor: AqiColor)),
+                        boxColor: Colors.blueGrey.shade200,
+                        aqiColor: AqiColor)),
           ),
         ),
         SafeArea(

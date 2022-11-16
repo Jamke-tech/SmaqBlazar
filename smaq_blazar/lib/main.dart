@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
 
-import 'classes/station_model.dart';
+import 'classes/Model/station_model.dart';
 import 'services/Station_service.dart';
 
 void main() {
@@ -31,10 +31,6 @@ void main() {
     print("Stations Saved");
 
     await stationsManager.SaveStations(listStations);
-
-
-
-
 
     return Home();
   }

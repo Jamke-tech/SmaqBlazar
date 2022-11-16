@@ -17,4 +17,6 @@ class Endpoints {
   final String MongoDbCollectionStations= "Stations";
   final String MongoDbCollectionDataCollected="DataCollected";
 
+  final String APIFlights = "https://opensky-network.org/api";
+
 }

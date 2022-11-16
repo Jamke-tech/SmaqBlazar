@@ -6,8 +6,8 @@ import 'dart:convert';
 
 
 import '../api/endpoints.dart';
-import '../classes/data_model.dart';
-import '../classes/station_model.dart';
+import '../classes/Model/data_model.dart';
+import '../classes/Model/station_model.dart';
 
 
 class DataManager {
