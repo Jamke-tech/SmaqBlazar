@@ -66,6 +66,21 @@ class DataManager {
 
           for(int i = 0; i<listDocs.length;i++){
             //We add to the vector the value in decendant order
+
+            //To solve some errors on contaminations measuring
+            double SO2 = (listDocs[i]["Pollutants"]["CxSO2"].toDouble()/1000)-1.05;
+            if(SO2<0){
+              SO2=0;
+            }
+            double NO2 = (listDocs[i]["Pollutants"]["CxNO2"].toDouble()/1000)-0.25;
+            if(NO2<0){
+              NO2=0;
+            }
+            double O3 = (listDocs[i]["Pollutants"]["CxO3"].toDouble()/1000)-0.1;
+            if(O3<0){
+              O3=0;
+            }
+
             listData.add(DataStation(StationID: listDocs[i]["StationID"],
                 CreationDate: listDocs[i]["CreationDate"],
                 Humidity: listDocs[i]["Weather"]["Humidity"].toDouble(),
@@ -74,9 +89,9 @@ class DataManager {
                 Rain: listDocs[i]["Weather"]["Rain"].toDouble(),
                 //As we save the pollutants in ppb we have to divide the ppb by 1000 to get ppm
                 CxCO: listDocs[i]["Pollutants"]["CxCO"].toDouble()/1000,
-                CxNO2: listDocs[i]["Pollutants"]["CxNO2"].toDouble()/1000,
-                CxO3: listDocs[i]["Pollutants"]["CxO3"].toDouble()/1000,
-                CxSO2: listDocs[i]["Pollutants"]["CxSO2"].toDouble()/1000,
+                CxNO2: NO2,
+                CxO3: O3,
+                CxSO2: SO2,
                 PM10: listDocs[i]["Particles"]["PM10"],
                 PM25: listDocs[i]["Particles"]["PM25"],
                 BlueLux: listDocs[i]["Light"]["BlueLux"].toDouble(),

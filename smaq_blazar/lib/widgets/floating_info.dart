@@ -9,14 +9,12 @@ import '../screens/detail_station.dart';
 
 class FloatInfo extends StatefulWidget {
   StationModel station;
-  Color aqiColor;
   Color boxColor;
 
   FloatInfo(
       {super.key,
       required this.station,
-      required this.boxColor,
-      required this.aqiColor});
+      required this.boxColor,});
 
   @override
   State<FloatInfo> createState() => _FloatInfoState();
@@ -69,7 +67,7 @@ class _FloatInfoState extends State<FloatInfo> {
                                   child: Text(widget.station.name,
                                       style: TextStyle(
                                         shadows: [
-                                          Shadow(color: const Color(0xff00877F),offset: Offset.fromDirection(1.25),blurRadius: 2.5 )
+                                          Shadow(color: Colors.blueGrey,offset: Offset.fromDirection(1.25),blurRadius: 2.5 )
                                         ],
                                         fontSize: 15,
                                         color: const Color(0xff00877F),
@@ -128,7 +126,7 @@ class _FloatInfoState extends State<FloatInfo> {
                                                   color:
                                                       widget.station.getAQI() !=
                                                               -1
-                                                          ? widget.aqiColor
+                                                          ? widget.station.colorAQI(widget.station.getAQI())
                                                           : Colors.white,
                                                 )),
                                           ),

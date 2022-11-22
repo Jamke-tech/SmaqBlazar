@@ -25,20 +25,13 @@ class GraphsGenerator {
       while ( actualDataTime
           .difference(lastDataTime)
           .inHours < maxTime && lupilupi < station.lastData.length -1) {
-        /*print(actualDataTime
-            .difference(lastDataTime)
-            .inHours);*/
+
 
         maxNum++;
         lastDataTime=DateTime.parse(
             station.lastData[lupilupi+1].CreationDate.replaceAll("/", "-"));
         lupilupi++;
       }
-      /*print(lupilupi);
-      print(maxNum);*/
-
-
-
 
       if (selectedTitleGraphs == "Meteorología") {
         if (selectedSubTitleGraphs == "Temperatura") {

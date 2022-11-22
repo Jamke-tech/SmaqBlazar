@@ -190,7 +190,7 @@ packages:
       name: lints
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   lists:
     dependency: transitive
     description:
@@ -317,6 +317,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.3.3"
+  rainbow_color:
+    dependency: "direct main"
+    description:
+      name: rainbow_color
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
+  rainbow_vis:
+    dependency: transitive
+    description:
+      name: rainbow_vis
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -356,14 +370,14 @@ packages:
       name: syncfusion_flutter_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "20.3.50"
+    version: "20.3.57"
   syncfusion_flutter_gauges:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_gauges
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "20.3.50"
+    version: "20.3.57"
   term_glyph:
     dependency: transitive
     description:
@@ -400,7 +414,7 @@ packages:
     source: hosted
     version: "0.3.1"
   vector_math:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: vector_math
       url: "https://pub.dartlang.org"

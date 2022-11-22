@@ -55,7 +55,7 @@ class _FloatFilterState extends State<FloatFilter> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     //border: Border.all(color: Colors.black, width: 1),
-                    color: Colors.blueGrey.shade400,
+                    color: Colors.blueGrey.shade100,
                     //Colors.lightGreen.shade800,
                     boxShadow: [
                       BoxShadow(

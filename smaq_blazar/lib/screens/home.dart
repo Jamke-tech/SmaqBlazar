@@ -1,7 +1,11 @@
+import 'package:SMAQ/classes/Model/all_state.dart';
+import 'package:SMAQ/services/Flight_service.dart';
+import 'package:SMAQ/widgets/floating_plane_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:vector_math/vector_math.dart' as Converter;
 
 import '../classes/Model/data_model.dart';
 import '../classes/Model/station_model.dart';
@@ -15,20 +19,21 @@ import 'package:location/location.dart';
 import '../widgets/floating_legend.dart';
 import '../widgets/floating_position.dart';
 
+
 class Home extends StatefulWidget {
+  LocationData locationData;
+  Home({super.key, required this.locationData});
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  late LocationData locationData;
   late bool serviceEnabled;
   bool planeClicked = false;
   late PermissionStatus permissionGranted;
   Location userLocation = Location();
   MapController mapController = MapController();
 
-  int _counter = 0;
 
   bool satellite = false;
   late StationModel stationShown = StationModel(
@@ -39,17 +44,36 @@ class _HomeState extends State<Home> {
       long: 0,
       lastData: [],
       lastAQI: []);
+  late AllState flightShown = AllState(
+    icao24:"000",
+    callSign:"NONE",
+    origin:"CATALONIA",
+    timePosition:0,
+    long:0,
+    lat:0,
+    baroAltitude:-1,
+    trueTrack: 0,
+    onGround:true,
+    geoAltitude:-1,
+    verticalVel: 0,
+    horizontalVel: 0,
+  );
   Color boxColor = Colors.lightGreen.shade800;
   Color AqiColor = Colors.lightGreen.shade800;
   bool addingStation = false;
   bool showingInfo = false;
   bool showingLegend = false;
   bool showingFilter= false;
+  bool isAPlane=false;
 
 
   List<StationModel> StationList = [];
+  List<AllState> flightsShowing = [];
 
   List<Marker> markersList = [];
+  List<Marker> markersForFlights = [];
+
+  List<Marker> markersToShow = [];
 
   @override
   void initState() {
@@ -65,11 +89,11 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    int i = 0;
     markersList = [];
-    //print(StationList[0]);
+    markersForFlights = [];
+    markersToShow = [];
+
     for (StationModel station in StationList) {
-      i++;
       print(station.lat);
       print(station.long);
       markersList.add(
@@ -83,6 +107,9 @@ class _HomeState extends State<Home> {
               int AqiLevel = station.getAQI();
               Color colorSelected = station.colorAQI(AqiLevel);
 
+
+
+
               return IconMap(
                 Iconcolor: colorSelected,
                 size: 10,
@@ -91,13 +118,60 @@ class _HomeState extends State<Home> {
                   setState(() {
                     stationShown = station;
                     AqiColor = colorSelected;
+                    isAPlane = false;
                   });
                 },
               );
             }),
       );
-      print("marker ${i}");
+
     }
+    for (AllState flight in flightsShowing) {
+
+      if(flight.baroAltitude<=2500) {
+        markersForFlights.add(
+          Marker(
+              point: LatLng(flight.lat, flight.long),
+              width: 20,
+              height: 20,
+              rotate: false,
+              builder: (context) {
+                if (flight.icao24 == flightShown.icao24) {
+
+                }
+
+
+                return Transform.rotate(
+                    angle: Converter.radians(flight.trueTrack),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          flightShown = flight;
+                          isAPlane = true;
+                        });
+                      },
+                      child: Icon(Icons.airplanemode_on_rounded,
+                        color: flight.icao24 == flightShown.icao24
+                            ? Colors.black
+                            : flight.getFlightColor(),
+
+
+                      ),
+                    ));
+              }),
+        );
+      }
+
+    }
+
+    if(planeClicked){
+      markersToShow.addAll(markersList);
+      markersToShow.addAll(markersForFlights);
+    }else{
+      markersToShow.addAll(markersList);
+    }
+
+
 
     return Scaffold(
       body: Stack(clipBehavior: Clip.hardEdge, fit: StackFit.expand, children: [
@@ -118,10 +192,10 @@ class _HomeState extends State<Home> {
                             long: 0,
                             lastData: [],
                             lastAQI: []);
+                        isAPlane=false;
                       });
                     },
-                    center: LatLng(markersList[0].point.latitude,
-                        markersList[0].point.longitude),
+                    center: LatLng(widget.locationData.latitude!,widget.locationData.longitude!),//LatLng(markersList[0].point.latitude,markersList[0].point.longitude),
                     minZoom: 2,
                     zoom: 14,
                     maxZoom: 20,
@@ -138,13 +212,13 @@ class _HomeState extends State<Home> {
                     retinaMode: true,
                   ),
                   MarkerClusterLayerOptions(
-                    maxClusterRadius: 60,
+                    maxClusterRadius: 20,
                     size: const Size(30, 30),
                     fitBoundsOptions: const FitBoundsOptions(
                       padding: EdgeInsets.all(40),
                     ),
 
-                    markers: markersList,
+                    markers: markersToShow,
 
                     builder: (context, markers) {
                       return FloatingActionButton(
@@ -264,11 +338,25 @@ class _HomeState extends State<Home> {
                                         content: Text(
                                             "Extraïent nova informació dels SMAQ's ...")),
                                   );
+
+                                  FlightService flights = FlightService();
+                                  List<AllState> flightsToShow = flightsShowing;
+                                  if(planeClicked) {
+                                    //We need to refresh the data of the flight when we clicked to see them
+                                    flightsToShow = [];
+                                    flightsToShow = await flights.getFlightWithinBounds(
+                                        mapController.center.latitude - 0.8,
+                                        mapController.center.latitude + 0.8,
+                                        mapController.center.longitude - 0.8,
+                                        mapController.center.longitude + 0.8);
+                                  }
+
+
                                   StationsManager stationsManager =
-                                      StationsManager();
+                                  StationsManager();
                                   List<StationModel> listStations =
-                                      await stationsManager
-                                          .getAllStationsWithLastData();
+                                  await stationsManager
+                                      .getAllStationsWithLastData();
 
                                   if (listStations.isEmpty) {
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -296,7 +384,28 @@ class _HomeState extends State<Home> {
                                       }
                                       StationList = listStations;
                                       stationsManager.SaveStations(StationList);
+
+                                      //actualitzem dades de vols
+
+                                      bool foundPlane = false;
+                                      int positionPlane = 0;
+                                      while (!foundPlane &&
+                                          positionPlane <
+                                              flightsToShow.length) {
+                                        if (flightsToShow[positionPlane]
+                                            .icao24 ==
+                                            flightShown.icao24) {
+                                          //We have found the station and we have to refresh the data
+                                          flightShown =
+                                          flightsToShow[positionPlane];
+                                          found = true;
+                                        }
+                                        positionPlane++;
+                                      }
+
+                                      flightsShowing=flightsToShow;
                                     });
+
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
                                           content: Text(
@@ -374,12 +483,12 @@ class _HomeState extends State<Home> {
                                 return;
                               }
                             }
-                            locationData = await userLocation.getLocation();
+                            widget.locationData = await userLocation.getLocation();
 
                             setState(() {
                               mapController.move(
-                                  LatLng(locationData.latitude!,
-                                      locationData.longitude!),
+                                  LatLng(widget.locationData.latitude!,
+                                      widget.locationData.longitude!),
                                   15);
                             });
                           },
@@ -404,10 +513,26 @@ class _HomeState extends State<Home> {
                             isPlaneOff: planeClicked,
                             isPlane: true,
                             functionWhenClicked: () async {
+
+                              FlightService flights = FlightService();
+                              print(planeClicked);
+                              List<AllState> flightsToShow = [];
+                              if(!planeClicked) {
+                                //We need to refresh the data of the flight when we clicked to see them
+                                 flightsToShow = await flights.getFlightWithinBounds(
+                                    mapController.center.latitude - 0.8,
+                                    mapController.center.latitude + 0.8,
+                                    mapController.center.longitude - 0.8,
+                                    mapController.center.longitude + 0.8);
+                              }else{
+                                flightsToShow = [];
+                              }
+                              //print(flightsToShow[0].icao24);
                               setState(() {
                                 planeClicked = !planeClicked;
+                                flightsShowing=flightsToShow;
                               });
-                              //TODO: Function to show and unshow the airplanes on the screen
+
                             },
                           )
                   ),
@@ -422,12 +547,11 @@ class _HomeState extends State<Home> {
             padding: const EdgeInsets.only(bottom: (16)),
             child: showingInfo && addingStation
                 ? Container()
-                : (stationShown.name == "ERROR"
+                : ((stationShown.name == "ERROR" && !isAPlane)
                     ? Container()
-                    : FloatInfo(
+                    : isAPlane ? FloatPlaneInfo(flight: flightShown): FloatInfo(
                         station: stationShown,
-                        boxColor: Colors.blueGrey.shade200,
-                        aqiColor: AqiColor)),
+                        boxColor: Colors.blueGrey.shade200)),
           ),
         ),
         SafeArea(

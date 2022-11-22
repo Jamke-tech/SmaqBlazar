@@ -4,6 +4,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
+import 'package:rainbow_color/rainbow_color.dart';
 
 class FloatLegend extends StatefulWidget {
   FloatLegend({super.key});
@@ -13,14 +14,26 @@ class FloatLegend extends StatefulWidget {
 }
 
 class _FloatLegendState extends State<FloatLegend> {
+  List<String> methods = ["Nivell de contaminació", 'Altitud de vol dels avions'];
+  String valueLegend = "Nivell de contaminació";
+  var rb =  const [
+  Color(0xff8CE0B0),
+  Color(0xff69debf),
+    Color(0xff43c7da),
+    Color(0xff2b8dd7),
+    Color(0xff0d4694),
+    Color(0xff0b1e5e),
 
+  ];
   @override
   Widget build(BuildContext context) {
 
 
+
+
     return Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
               topLeft: Radius.zero,
               topRight: Radius.circular(8),
               bottomLeft: Radius.circular(8),
@@ -39,10 +52,61 @@ class _FloatLegendState extends State<FloatLegend> {
         width: MediaQuery.of(context).size.width * 0.95,
         //height: MediaQuery.of(context).size.height * 0.16,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-          child: Column(
+          padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
+          child: valueLegend == "Nivell de contaminació" ? Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    //border: Border.all(color: Colors.black, width: 1),
+                    color: Colors.blueGrey.shade100,
+                    //Colors.lightGreen.shade800,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blueGrey.withOpacity(0.4),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        //offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 2, 2, 2),
+                    child: DropdownButton(
+                      underline: Container(),
+                      elevation: 8,
+                      iconSize: 20,
+                      alignment: AlignmentDirectional.center,
+                      icon: const Icon(
+                        Icons.arrow_drop_down_circle_outlined,
+                        color: Color(0xff00877F),
+                      ),
+                      value: valueLegend,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          //Repaint graphic
+                          valueLegend = newValue!;
+                        });
+                      },
+                      items: methods.map((String methods) {
+                        return DropdownMenuItem<String>(
+                          value: methods,
+                          child: Text(methods,
+                              style: const TextStyle(
+                                fontSize: 19,
+                                color: Color(0xff00877F),
+                              )),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
               Row(
                 children: [
                   Expanded(
@@ -69,10 +133,10 @@ class _FloatLegendState extends State<FloatLegend> {
                                       fontSize: 14,
                                       color: Colors.lightGreen.shade800,
                                     )),
-                                Padding(
-                                  padding: const EdgeInsets.only(top:4),
+                                const Padding(
+                                  padding: EdgeInsets.only(top:4),
                                   child: Text( "No hi ha perill per la salut.",
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 10,
                                         color: Colors.white,
                                       )),
@@ -102,17 +166,17 @@ class _FloatLegendState extends State<FloatLegend> {
                             padding: const EdgeInsets.only(left: 8),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                              children: const [
                                 Text("MODERAT: 51 - 100",
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.amber,
                                     )),
                                 Padding(
-                                  padding: const EdgeInsets.only(top:4),
+                                  padding: EdgeInsets.only(top:4),
                                   child: Text(
                                       "LLeu amenaça per a grups sensibles.",
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 10,
                                         color: Colors.white,
                                       )),
@@ -157,10 +221,10 @@ class _FloatLegendState extends State<FloatLegend> {
                                         fontSize: 14,
                                         color: Colors.orange.shade800,
                                       )),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top:4),
+                                  const Padding(
+                                    padding: EdgeInsets.only(top:4),
                                     child: Text( "LLeugeres molèsties al respirar.",
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white,
                                         )),
@@ -196,11 +260,11 @@ class _FloatLegendState extends State<FloatLegend> {
                                         fontSize: 14,
                                         color: Colors.redAccent.shade700,
                                       )),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top:4),
+                                  const Padding(
+                                    padding: EdgeInsets.only(top:4),
                                     child: Text(
                                         "Greus problemes a grups sensibles.",
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white,
                                         )),
@@ -246,10 +310,10 @@ class _FloatLegendState extends State<FloatLegend> {
                                         fontSize: 15,
                                         color: Colors.pink.shade800,
                                       )),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top:4),
+                                  const Padding(
+                                    padding: EdgeInsets.only(top:4),
                                     child: Text( "Pot causar malalties cròniques o afectacions importants.",
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white,
                                         )),
@@ -279,17 +343,17 @@ class _FloatLegendState extends State<FloatLegend> {
                               padding: const EdgeInsets.only(left: 8),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                                children: const [
                                   Text("PERILLÓS: 300+",
                                       style: TextStyle(
                                         fontSize: 15,
                                         color: Color(0xFF7D0023),
                                       )),
                                   Padding(
-                                    padding: const EdgeInsets.only(top:4),
+                                    padding: EdgeInsets.only(top:4),
                                     child: Text(
                                         "L'exposició prolongada pot causar morts prematures.",
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.white,
                                         )),
@@ -301,12 +365,263 @@ class _FloatLegendState extends State<FloatLegend> {
 
                         ],
                       ),
-                    )
+                    ),
+
 
 
                   ],
                 ),
               ),
+
+
+            ],
+          ) : Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    //border: Border.all(color: Colors.black, width: 1),
+                    color: Colors.blueGrey.shade100,
+                    //Colors.lightGreen.shade800,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blueGrey.withOpacity(0.4),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        //offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 2, 2, 2),
+                    child: DropdownButton(
+                      underline: Container(),
+                      elevation: 8,
+                      iconSize: 20,
+                      alignment: AlignmentDirectional.center,
+                      icon: const Icon(
+                        Icons.arrow_drop_down_circle_outlined,
+                        color: Color(0xff00877F),
+                      ),
+                      value: valueLegend,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          //Repaint graphic
+                          valueLegend = newValue!;
+                        });
+                      },
+                      items: methods.map((String methods) {
+                        return DropdownMenuItem<String>(
+                          value: methods,
+                          child: Text(methods,
+                              style: const TextStyle(
+                                fontSize: 19,
+                                color: Color(0xff00877F),
+                              )),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      children: [
+                        Icon(Icons.airplanemode_on_rounded,
+                          color: rb[0],
+
+
+                        ),
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Text("0 - 100 m ",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                    )),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      children: [
+                        Icon(Icons.airplanemode_on_rounded,
+                          color: rb[1],
+
+
+                        ),
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Text("100 - 300 m ",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                    )),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top:4),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Icon(Icons.airplanemode_on_rounded,
+                            color: rb[2],
+
+
+                          ),
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text("300 - 600 m ",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                      )),
+
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Icon(Icons.airplanemode_on_rounded,
+                            color: rb[3],
+
+
+                          ),
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text("600 - 1000 m ",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                      )),
+
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Icon(Icons.airplanemode_on_rounded,
+                            color: rb[4],
+
+
+                          ),
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text("1000 - 1500 m ",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                      )),
+
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Icon(Icons.airplanemode_on_rounded,
+                            color: rb[5],
+
+
+                          ),
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text("1500 - 2500 m ",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                      )),
+
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+
+
+                  ],
+                ),
+              ),
+
 
             ],
           ),

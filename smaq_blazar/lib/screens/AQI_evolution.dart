@@ -225,7 +225,7 @@ class _EvolutionStationState extends State<EvolutionStation> {
                                             padding: const EdgeInsets.only(top: 4),
                                             child: Text(
                                                 dataShown.pollutantsAverage.isNotEmpty
-                                                    ? "${dataShown.pollutantsAverage[5].toStringAsFixed(3)} ppm"
+                                                    ? "${((dataShown.pollutantsAverage[5])*1000).toStringAsFixed(3)} ppb"
                                                     : "NO DATA",
                                                 style: const TextStyle(
                                                   fontSize: 15,
@@ -317,7 +317,7 @@ class _EvolutionStationState extends State<EvolutionStation> {
                                             padding: const EdgeInsets.only(top: 4),
                                             child: Text(
                                                 dataShown.pollutantsAverage.isNotEmpty
-                                                    ? "${dataShown.pollutantsAverage[4].toStringAsFixed(3)} ppm"
+                                                    ? "${((dataShown.pollutantsAverage[4])*1000).toStringAsFixed(3)} ppb"
                                                     : "NO DATA",
                                                 style: const TextStyle(
                                                   fontSize: 15,
@@ -684,6 +684,7 @@ class _EvolutionStationState extends State<EvolutionStation> {
                   gradient: const LinearGradient(
                       //colors: [Colors.blueGrey.shade200, Colors.blueGrey],
                     colors:[ Color(0xff8CE0B0),
+                      Color(0xff00BCD4),
                       Color(0xff00877F)],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,

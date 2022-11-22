@@ -215,6 +215,7 @@ class _GraphsStationState extends State<GraphsStation> {
                       gradient: const LinearGradient(
                         colors: [
                            Color(0xff8CE0B0),
+                           Color(0xff00BCD4),
                            Color(0xff00877F),
                         ],
                       ),
@@ -226,8 +227,9 @@ class _GraphsStationState extends State<GraphsStation> {
                       belowBarData: BarAreaData(
                         show: true,
                         gradient: LinearGradient(
-                          colors: [
-                            const Color(0xff8CE0B0),
+                          colors:const [
+                             Color(0xff8CE0B0),
+                            Color(0xff00BCD4),
                             Color(0xff00877F),
                           ].map((color) => color.withOpacity(0.4)).toList(),
                         ),

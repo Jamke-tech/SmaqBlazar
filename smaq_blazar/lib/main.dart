@@ -32,7 +32,29 @@ void main() {
 
     await stationsManager.SaveStations(listStations);
 
-    return Home();
+    serviceEnabled =
+    await userLocation.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled =
+      await userLocation.requestService();
+      if (!serviceEnabled) {
+
+      }
+    }
+    permissionGranted =
+    await userLocation.hasPermission();
+    if (permissionGranted ==
+        PermissionStatus.denied) {
+      permissionGranted =
+      await userLocation.requestPermission();
+      if (permissionGranted !=
+          PermissionStatus.granted) {
+
+      }
+    }
+    locationData = await userLocation.getLocation();
+
+    return Home(locationData: locationData,);
   }
 
   runApp(MaterialApp(
@@ -45,7 +67,7 @@ void main() {
     //initialRoute: '/home',
     routes: {
       //Here we have to put all the routes to diferent pages
-      '/home': (context) => Home(),
+      //'/home': (context) => Home(),
       '/detail_station': (context)=> const DetailStation(),
       '/graphs_station':(context)=> const GraphsStation(),
       '/evolution_station':(context)=> const EvolutionStation(),
@@ -81,6 +103,16 @@ Widget getSplash(){
                     fontWeight: FontWeight.bold,
                     fontSize: 15,)),
             TyperAnimatedText('Extraïent dades de contaminació...',
+                textStyle: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,)),
+            TyperAnimatedText('Localitzant la teva posició...',
+                textStyle: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,)),
+            TyperAnimatedText('Cercant avions propers...',
                 textStyle: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,

@@ -599,7 +599,7 @@ class _DetailStationState extends State<DetailStation> {
                                       padding: const EdgeInsets.only(top: 4),
                                       child: Text(
                                           station.lastData.isNotEmpty
-                                              ? "${station.lastData[0].CxNO2.toStringAsFixed(3)} ppm"
+                                              ? "${((station.lastData[0].CxNO2)*1000).toStringAsFixed(3)} ppb"
                                               : "NO DATA",
                                           style: const TextStyle(
                                             fontSize: 15,
@@ -691,7 +691,7 @@ class _DetailStationState extends State<DetailStation> {
                                       padding: const EdgeInsets.only(top: 4),
                                       child: Text(
                                           station.lastData.isNotEmpty
-                                              ? "${station.lastData[0].CxSO2.toStringAsFixed(3)} ppm"
+                                              ? "${((station.lastData[0].CxSO2)*1000).toStringAsFixed(3)} ppb"
                                               : "NO DATA",
                                           style: const TextStyle(
                                             fontSize: 15,
