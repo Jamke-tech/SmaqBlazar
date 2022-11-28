@@ -8,7 +8,7 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 class FloatFilter extends StatefulWidget {
-  Function (int filter) functionWhenFilterChanged;
+  Function (int filter, String selectedMethod) functionWhenFilterChanged;
  FloatFilter({super.key, required this.functionWhenFilterChanged});
 
   @override
@@ -17,7 +17,7 @@ class FloatFilter extends StatefulWidget {
 
 class _FloatFilterState extends State<FloatFilter> {
   String selectedMethod = "Únic";
-  List<String> methods = ['Multiple', 'Únic'];
+  List<String> methods = ['Múltiple', 'Únic'];
   double pollutantsToShow = 0;
   bool pollutantsChanged = false;
 
@@ -173,7 +173,7 @@ class _FloatFilterState extends State<FloatFilter> {
                                   pollutantsToShow =
                                       (newValue.round()).toDouble();
                                 });
-                                widget.functionWhenFilterChanged(newValue.round());
+                                widget.functionWhenFilterChanged(newValue.round(),selectedMethod);
                               },
                               position: LinearElementPosition.cross,
                               child: const Padding(

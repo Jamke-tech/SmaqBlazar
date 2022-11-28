@@ -1,10 +1,12 @@
 import 'package:SMAQ/classes/Model/station_model.dart';
+import 'package:SMAQ/classes/helpers/design_helper.dart';
 import 'package:flutter/material.dart';
 
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:weather_icons/weather_icons.dart';
 
-import '../classes/Time.dart';
+import '../classes/helpers/Time.dart';
+import '../widgets/gauge/radial_Gauge.dart';
 
 class DetailStation extends StatefulWidget {
   const DetailStation({super.key});
@@ -20,34 +22,64 @@ class _DetailStationState extends State<DetailStation> {
   Widget build(BuildContext context) {
     //We have to recover the info from the station
     TimeAnalizer time = TimeAnalizer();
+    DesignHelper design = DesignHelper();
 
     Object? data = ModalRoute.of(context)?.settings.arguments;
     station = data as StationModel;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          station.name,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 30,
-            color: Colors.black,
+        leading: IconButton(
+          icon: Icon(
+            Icons.map_rounded,
+            color: Colors.blueGrey.shade700,
+            size: 35,
+            shadows: [
+              Shadow(
+                  color: Colors.blueGrey,
+                  offset: Offset.fromDirection(1.25),
+                  blurRadius: 2.5)
+            ],
           ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
+        title: Text(station.name,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              shadows: [
+                Shadow(
+                    color: Colors.blueGrey,
+                    offset: Offset.fromDirection(1.25),
+                    blurRadius: 2.5)
+              ],
+              fontSize: 30,
+              color: const Color(0xff00877F),
+              fontWeight: FontWeight.bold,
+            )),
         backgroundColor: Colors.blueGrey.shade200,
       ),
+      backgroundColor: Colors.blueGrey.shade50,
       body: ListView(
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(8, 16, 8, 8),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
             child: Text("Dades Meteorològiques: ",
                 style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black)),
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  shadows: [
+                    Shadow(
+                        color: Colors.blueGrey,
+                        offset: Offset.fromDirection(1.25),
+                        blurRadius: 2.5)
+                  ],
+                )),
           ),
           Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 20),
               child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
@@ -128,8 +160,8 @@ class _DetailStationState extends State<DetailStation> {
                                                         fontSize: 15,
                                                         color: Colors.black)),
                                                 const Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 4),
+                                                  padding:
+                                                      EdgeInsets.only(left: 4),
                                                   child: Icon(
                                                     Icons.upload,
                                                     size: 10,
@@ -205,16 +237,16 @@ class _DetailStationState extends State<DetailStation> {
                                                     color: Color(0xff00877F),
                                                   ),
                                                   Text(
-                                                      station.lastData.isNotEmpty
+                                                      station.lastData
+                                                              .isNotEmpty
                                                           ? "${station.computeMaxAndMinFromData("Humidity")[0].toStringAsFixed(2)} %"
                                                           : "---",
                                                       style: const TextStyle(
                                                           fontSize: 15,
                                                           color: Colors.black)),
                                                   const Padding(
-                                                    padding:
-                                                        EdgeInsets.only(
-                                                            left: 4),
+                                                    padding: EdgeInsets.only(
+                                                        left: 4),
                                                     child: Icon(
                                                       Icons.upload,
                                                       size: 10,
@@ -222,7 +254,8 @@ class _DetailStationState extends State<DetailStation> {
                                                     ),
                                                   ),
                                                   Text(
-                                                      station.lastData.isNotEmpty
+                                                      station.lastData
+                                                              .isNotEmpty
                                                           ? "${station.computeMaxAndMinFromData("Humidity")[1].toStringAsFixed(2)} %"
                                                           : "---",
                                                       style: const TextStyle(
@@ -271,14 +304,14 @@ class _DetailStationState extends State<DetailStation> {
                                 ),
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(0, 16, 4, 0),
-                                  child: Text(
-                                      "dew",
+                                  child: Text("dew",
                                       style: TextStyle(
-                                          fontSize: 10, color: Color(0xff00877F))),
+                                          fontSize: 10,
+                                          color: Color(0xff00877F))),
                                 ),
                                 Text(
                                     station.lastData.isNotEmpty
-                                        ? "${station.computeDewPoint(station.lastData[0].Temperature,station.lastData[0].Humidity).toStringAsFixed(2)} ºC"
+                                        ? "${station.computeDewPoint(station.lastData[0].Temperature, station.lastData[0].Humidity).toStringAsFixed(2)} ºC"
                                         : "---",
                                     style: const TextStyle(
                                         fontSize: 15, color: Colors.white)),
@@ -307,8 +340,7 @@ class _DetailStationState extends State<DetailStation> {
                                 ),
                                 Text(
                                     station.lastData.isNotEmpty
-                                        ? "${station.lastData[0].Rain
-                                        .toStringAsFixed(2)} mm"
+                                        ? "${station.lastData[0].Rain.toStringAsFixed(2)} mm"
                                         : "---",
                                     style: const TextStyle(
                                         fontSize: 15, color: Colors.white)),
@@ -319,7 +351,6 @@ class _DetailStationState extends State<DetailStation> {
                       )
                     ],
                   ))),
-
           const Divider(
             color: Color(0xff00877F),
             height: 6,
@@ -327,118 +358,13 @@ class _DetailStationState extends State<DetailStation> {
             indent: 8,
             endIndent: 8,
           ),
-
           Padding(
-            padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-            child: SfRadialGauge(
-              title: const GaugeTitle(
-                  alignment: GaugeAlignment.near,
-                  text: "Nivell de contaminació actual:",
-                  textStyle: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black)),
-              axes: <RadialAxis>[
-                RadialAxis(
-                    startAngle: 140,
-                    endAngle: 40,
-                    isInversed: false,
-                    canScaleToFit: true,
-                    minimum: 0,
-                    maximum: 500,
-                    labelsPosition: ElementsPosition.outside,
-                    showTicks: false,
-                    showLastLabel: true,
-                    ticksPosition: ElementsPosition.outside,
-                    radiusFactor: 1,
-                    useRangeColorForAxis: true,
-                    canRotateLabels: true,
-                    ranges: [
-                      GaugeRange(
-                        startValue: 0,
-                        endValue: 50,
-                        color: Colors.lightGreen.shade800,
-                        startWidth: 16,
-                        endWidth: 16,
-
-                      ),
-                      GaugeRange(
-                        startValue: 51,
-                        endValue: 100,
-                        color: Colors.amber,
-                        startWidth: 16,
-                        endWidth: 16,
-                      ),
-                      GaugeRange(
-                        startValue: 101,
-                        endValue: 150,
-                        color: Colors.orange.shade800,
-                        startWidth: 16,
-                        endWidth: 16,
-                      ),
-                      GaugeRange(
-                        startValue: 151,
-                        endValue: 200,
-                        color: Colors.redAccent.shade700,
-                        startWidth: 16,
-                        endWidth: 16,
-                      ),
-                      GaugeRange(
-                        startValue: 201,
-                        endValue: 300,
-                        color: Colors.pink.shade800,
-                        startWidth: 16,
-                        endWidth: 16,
-                      ),
-                      GaugeRange(
-                        startValue: 301,
-                        endValue: 500,
-                        color: const Color(0xFF7D0023),
-                        startWidth: 16,
-                        endWidth: 16,
-                      ),
-                    ],
-                    pointers: [
-                      NeedlePointer(
-                        value: station.getAQI().toDouble(),
-                        enableAnimation: true,
-                        needleLength: 0.75,
-                        needleStartWidth: 1,
-                        needleEndWidth: 15,
-                        needleColor: station.colorAQI(station.getAQI()),
-                        knobStyle: KnobStyle(
-                          knobRadius: 0.08,
-                          color: station.colorAQI(station.getAQI()),
-                          borderColor: Colors.black,
-                          borderWidth: 0.01,
-                        ),
-                        tailStyle: const TailStyle(),
-                        animationType: AnimationType.ease,
-                        animationDuration: 3000,
-                      )
-                    ],
-                    axisLineStyle: AxisLineStyle(
-                      color: Colors.blueGrey.shade200,
-                      thickness: 30,
-                      cornerStyle: CornerStyle.bothFlat,
-                    ),
-                    annotations: <GaugeAnnotation>[
-                      GaugeAnnotation(
-                          widget: Text('AQI: ${station.getAQI()}',
-                              style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  color: station.colorAQI(station.getAQI()))),
-                          angle: 90,
-                          positionFactor: 0.5)
-                    ])
-              ],
-            ),
+            padding: const EdgeInsets.fromLTRB(8, 20, 8, 0),
+            child: RadialGaugeAQI(station: station),
           ),
-
           Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 0, 8, 16),
-            child: Center(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
@@ -465,19 +391,48 @@ class _DetailStationState extends State<DetailStation> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                           child: Text(
-                              "Estat del aire: ${station.getLevel(station.getAQI())}",
+                              "Estat del aire: ${ station.getAQI()==-1 ? "---" : design.getLevel(station.getAQI())}",
                               style: TextStyle(
+                                  shadows: [
+                                    Shadow(
+                                        color: Colors.blueGrey,
+                                        offset: Offset.fromDirection(1.25),
+                                        blurRadius: 2.5)
+                                  ],
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: station.colorAQI(station.getAQI()))),
+                                  color: design.colorAQI(station.getAQI()))),
+                        ),
+                        const Divider(
+                          color: Colors.white,
+                          height: 4,
+                          thickness: 1.2,
+                          indent: 8,
+                          endIndent: 8,
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
-                          child: Text(station.textAQI(station.getAQI()),
+                          child: Text(station.getAQI()==-1 ? "---" :design.textAQIExtended(station.getAQI()),
                               style: const TextStyle(
                                   fontSize: 15,
                                   //fontWeight: FontWeight.bold,
                                   color: Color(0xff00877F))),
+                        ),
+                        const Divider(
+                          color: Colors.white,
+                          height: 4,
+                          thickness: 1.2,
+                          indent: 8,
+                          endIndent: 8,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                          child:  Text(
+                              "Contaminant predominant:  ${  station.lastData.isNotEmpty ? design.getMainPollutant(station.getAQI(),station.getAQIListFromCx(station.getAverageCxFromData(DateTime.parse(station.lastData[0].CreationDate.replaceAll("/", "-"))))) : "---"}",
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black)),
                         ),
                       ],
                     ),
@@ -493,16 +448,21 @@ class _DetailStationState extends State<DetailStation> {
             indent: 8,
             endIndent: 8,
           ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
             child: Text("Concentració de contaminants: ",
                 style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black)),
+                    color: Colors.black, shadows: [
+                  Shadow(
+                      color: Colors.blueGrey,
+                      offset: Offset.fromDirection(1.25),
+                      blurRadius: 2.5)
+                ],)),
           ),
           Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 32),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
@@ -529,7 +489,7 @@ class _DetailStationState extends State<DetailStation> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: station.lastAQI.isNotEmpty
-                                  ? station.colorAQI(station.lastAQI[3])
+                                  ? design.colorAQI(station.lastAQI[3])
                                   : const Color(0xff00877F),
                               border: Border.all(width: 1, color: Colors.black),
                             ),
@@ -544,15 +504,14 @@ class _DetailStationState extends State<DetailStation> {
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: station.lastAQI.isNotEmpty
-                                            ? station
-                                                .colorAQI(station.lastAQI[3])
+                                            ? design.colorAQI(station.lastAQI[3])
                                             : Colors.blueGrey,
                                       )),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Text(
                                         station.lastData.isNotEmpty
-                                            ? "${station.lastData[0].CxCO.toStringAsFixed(3)} ppm"
+                                            ? "${station.lastData[0].CxCO.toStringAsFixed(1)} ppm"
                                             : "NO DATA",
                                         style: const TextStyle(
                                           fontSize: 15,
@@ -575,7 +534,7 @@ class _DetailStationState extends State<DetailStation> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: station.lastAQI.isNotEmpty
-                                    ? station.colorAQI(station.lastAQI[5])
+                                    ? design.colorAQI(station.lastAQI[5])
                                     : const Color(0xff00877F),
                                 border:
                                     Border.all(width: 1, color: Colors.black),
@@ -591,15 +550,14 @@ class _DetailStationState extends State<DetailStation> {
                                         style: TextStyle(
                                           fontSize: 20,
                                           color: station.lastAQI.isNotEmpty
-                                              ? station
-                                                  .colorAQI(station.lastAQI[5])
+                                              ? design.colorAQI(station.lastAQI[5])
                                               : Colors.blueGrey,
                                         )),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 4),
                                       child: Text(
                                           station.lastData.isNotEmpty
-                                              ? "${((station.lastData[0].CxNO2)*1000).toStringAsFixed(3)} ppb"
+                                              ? "${((station.lastData[0].CxNO2) * 1000).toStringAsFixed(0)} ppb"
                                               : "NO DATA",
                                           style: const TextStyle(
                                             fontSize: 15,
@@ -621,7 +579,7 @@ class _DetailStationState extends State<DetailStation> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: station.lastAQI.isNotEmpty
-                                  ? station.colorAQI(station.lastAQI[0])
+                                  ? design.colorAQI(station.lastAQI[0])
                                   : const Color(0xff00877F),
                               border: Border.all(width: 1, color: Colors.black),
                             ),
@@ -636,8 +594,7 @@ class _DetailStationState extends State<DetailStation> {
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: station.lastAQI.isNotEmpty
-                                            ? station
-                                                .colorAQI(station.lastAQI[0])
+                                            ? design.colorAQI(station.lastAQI[0])
                                             : Colors.blueGrey,
                                       )),
                                   Padding(
@@ -667,7 +624,7 @@ class _DetailStationState extends State<DetailStation> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: station.lastAQI.isNotEmpty
-                                    ? station.colorAQI(station.lastAQI[4])
+                                    ? design.colorAQI(station.lastAQI[4])
                                     : const Color(0xff00877F),
                                 border:
                                     Border.all(width: 1, color: Colors.black),
@@ -683,15 +640,14 @@ class _DetailStationState extends State<DetailStation> {
                                         style: TextStyle(
                                           fontSize: 20,
                                           color: station.lastAQI.isNotEmpty
-                                              ? station
-                                                  .colorAQI(station.lastAQI[4])
+                                              ? design.colorAQI(station.lastAQI[4])
                                               : Colors.blueGrey,
                                         )),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 4),
                                       child: Text(
                                           station.lastData.isNotEmpty
-                                              ? "${((station.lastData[0].CxSO2)*1000).toStringAsFixed(3)} ppb"
+                                              ? "${((station.lastData[0].CxSO2) * 1000).toStringAsFixed(0)} ppb"
                                               : "NO DATA",
                                           style: const TextStyle(
                                             fontSize: 15,
@@ -716,16 +672,21 @@ class _DetailStationState extends State<DetailStation> {
             indent: 8,
             endIndent: 8,
           ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
             child: Text("Particules en Suspensió: ",
                 style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black)),
+                    color: Colors.black, shadows: [
+                  Shadow(
+                      color: Colors.blueGrey,
+                      offset: Offset.fromDirection(1.25),
+                      blurRadius: 2.5)
+                ],)),
           ),
           Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 32),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
@@ -752,7 +713,7 @@ class _DetailStationState extends State<DetailStation> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: station.lastAQI.isNotEmpty
-                                  ? station.colorAQI(station.lastAQI[1])
+                                  ? design.colorAQI(station.lastAQI[1])
                                   : const Color(0xff00877F),
                               border: Border.all(width: 1, color: Colors.black),
                             ),
@@ -767,15 +728,14 @@ class _DetailStationState extends State<DetailStation> {
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: station.lastAQI.isNotEmpty
-                                            ? station
-                                                .colorAQI(station.lastAQI[1])
+                                            ? design.colorAQI(station.lastAQI[1])
                                             : Colors.blueGrey,
                                       )),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 4),
                                     child: Text(
                                         station.lastData.isNotEmpty
-                                            ? "${station.lastData[0].PM25} ug/m3"
+                                            ? "${station.lastData[0].PM25.toStringAsFixed(1)} ug/m3"
                                             : "NO DATA",
                                         style: const TextStyle(
                                           fontSize: 15,
@@ -798,7 +758,7 @@ class _DetailStationState extends State<DetailStation> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: station.lastAQI.isNotEmpty
-                                    ? station.colorAQI(station.lastAQI[2])
+                                    ? design.colorAQI(station.lastAQI[2])
                                     : const Color(0xff00877F),
                                 border:
                                     Border.all(width: 1, color: Colors.black),
@@ -814,8 +774,7 @@ class _DetailStationState extends State<DetailStation> {
                                         style: TextStyle(
                                           fontSize: 20,
                                           color: station.lastAQI.isNotEmpty
-                                              ? station
-                                                  .colorAQI(station.lastAQI[2])
+                                              ? design.colorAQI(station.lastAQI[2])
                                               : Colors.blueGrey,
                                         )),
                                     Padding(
@@ -847,16 +806,21 @@ class _DetailStationState extends State<DetailStation> {
             indent: 8,
             endIndent: 8,
           ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
             child: Text("Valors lumínics: ",
                 style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black)),
+                    color: Colors.black, shadows: [
+                  Shadow(
+                      color: Colors.blueGrey,
+                      offset: Offset.fromDirection(1.25),
+                      blurRadius: 2.5)
+                ],)),
           ),
           Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 32),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
@@ -902,10 +866,10 @@ class _DetailStationState extends State<DetailStation> {
                                                 color: Colors.black,
                                               )),
                                           Text(
-                                              "${station.lastData[0].UV} (${station.colorUV(station.lastData[0].UV)[1]})",
+                                              "${station.lastData[0].UV} (${design.colorUV(station.lastData[0].UV)[1]})",
                                               style: TextStyle(
                                                   fontSize: 20,
-                                                  color: station.colorUV(station
+                                                  color: design.colorUV(station
                                                       .lastData[0].UV)[0]))
                                         ])
                                       : ([
@@ -1052,16 +1016,22 @@ class _DetailStationState extends State<DetailStation> {
             indent: 8,
             endIndent: 8,
           ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
             child: Text("Sonòmetre: ",
                 style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black)),
+                    color: Colors.black,
+                  shadows: [
+                    Shadow(
+                        color: Colors.blueGrey,
+                        offset: Offset.fromDirection(1.25),
+                        blurRadius: 2.5)
+                  ],)),
           ),
           Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 32),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
@@ -1077,7 +1047,7 @@ class _DetailStationState extends State<DetailStation> {
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
                   child: Column(
                     children: [
                       Row(
@@ -1124,16 +1094,21 @@ class _DetailStationState extends State<DetailStation> {
             indent: 8,
             endIndent: 8,
           ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
             child: Text("Informació històrica: ",
                 style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black)),
+                    color: Colors.black, shadows: [
+                  Shadow(
+                      color: Colors.blueGrey,
+                      offset: Offset.fromDirection(1.25),
+                      blurRadius: 2.5)
+                ],)),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(8, 8, 8, 20),
             child: Center(
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1144,11 +1119,19 @@ class _DetailStationState extends State<DetailStation> {
                     child: ElevatedButton(
                         onPressed: () {
                           //Navigate to page graphics
+                          if(station.lastData.isNotEmpty){
                           Navigator.pushNamed(context, '/graphs_station',
-                              arguments: station);
+                              arguments: station);}else{
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      'No hi han dades suficients per mostrar gràfiques.')),
+                            );
+                          }
+
                         },
                         child: const Text("Gràfiques",
-                            style: TextStyle(fontSize: 16))),
+                            style: TextStyle(fontSize: 18))),
                   ),
                 ),
                 Expanded(
@@ -1157,12 +1140,18 @@ class _DetailStationState extends State<DetailStation> {
                     child: ElevatedButton(
                       onPressed: () {
                         //Navigate to page Evolution
-                        Navigator.pushNamed(context, '/evolution_station',
-                            arguments: station);
+                        if(station.lastData.isNotEmpty){Navigator.pushNamed(context, '/evolution_station',
+                            arguments: station);}else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text(
+                                    "No hi han dades suficients per mostrar l'evolució temporal")),
+                          );
+                        }
                       },
                       child: const Text(
                         "Evolució AQI",
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 18),
                       ),
                     ),
                   ),

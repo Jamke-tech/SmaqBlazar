@@ -1,20 +1,22 @@
-import 'package:SMAQ/classes/Time.dart';
+import 'package:SMAQ/classes/helpers/Time.dart';
+import 'package:SMAQ/classes/helpers/design_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:weather_icons/weather_icons.dart';
 
-import '../classes/Model/station_model.dart';
-import '../screens/detail_station.dart';
+import '../../classes/Model/station_model.dart';
+import '../../screens/detail_station.dart';
 
 class FloatInfo extends StatefulWidget {
   StationModel station;
   Color boxColor;
 
-  FloatInfo(
-      {super.key,
-      required this.station,
-      required this.boxColor,});
+  FloatInfo({
+    super.key,
+    required this.station,
+    required this.boxColor,
+  });
 
   @override
   State<FloatInfo> createState() => _FloatInfoState();
@@ -24,6 +26,7 @@ class _FloatInfoState extends State<FloatInfo> {
   @override
   Widget build(BuildContext context) {
     TimeAnalizer time = TimeAnalizer();
+    DesignHelper design = DesignHelper();
 
     return GestureDetector(
         onTap: () {
@@ -67,7 +70,11 @@ class _FloatInfoState extends State<FloatInfo> {
                                   child: Text(widget.station.name,
                                       style: TextStyle(
                                         shadows: [
-                                          Shadow(color: Colors.blueGrey,offset: Offset.fromDirection(1.25),blurRadius: 2.5 )
+                                          Shadow(
+                                              color: Colors.blueGrey,
+                                              offset:
+                                                  Offset.fromDirection(1.25),
+                                              blurRadius: 2.5)
                                         ],
                                         fontSize: 15,
                                         color: const Color(0xff00877F),
@@ -100,15 +107,24 @@ class _FloatInfoState extends State<FloatInfo> {
                                       padding:
                                           const EdgeInsets.fromLTRB(8, 8, 8, 8),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          const Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 2),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 4),
                                             child: Icon(
                                               WeatherIcons.smoke,
                                               size: 25,
-                                              color: Color(0xff00877F),
+                                              color: const Color(0xff00877F),
+                                              shadows: [
+                                                Shadow(
+                                                    color: Colors.blueGrey,
+                                                    offset:
+                                                        Offset.fromDirection(
+                                                            1.25),
+                                                    blurRadius: 2.5)
+                                              ],
                                             ),
                                           ),
                                           Padding(
@@ -126,7 +142,9 @@ class _FloatInfoState extends State<FloatInfo> {
                                                   color:
                                                       widget.station.getAQI() !=
                                                               -1
-                                                          ? widget.station.colorAQI(widget.station.getAQI())
+                                                          ? design.colorAQI(
+                                                              widget.station
+                                                                  .getAQI())
                                                           : Colors.white,
                                                 )),
                                           ),
@@ -219,7 +237,8 @@ class _FloatInfoState extends State<FloatInfo> {
                               child: Row(
                                 children: [
                                   const Padding(
-                                    padding: EdgeInsets.only(left: 10.0, right: 2),
+                                    padding:
+                                        EdgeInsets.only(left: 10.0, right: 2),
                                     child: Icon(
                                       Icons.tornado_rounded,
                                       size: 16,

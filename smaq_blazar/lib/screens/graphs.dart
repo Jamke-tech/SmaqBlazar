@@ -1,6 +1,6 @@
-import 'package:SMAQ/classes/Time.dart';
-import 'package:SMAQ/classes/graphs_generator.dart';
+import 'package:SMAQ/classes/helpers/Time.dart';
 import 'package:SMAQ/classes/Model/station_model.dart';
+import 'package:SMAQ/classes/helpers/graphs_generator.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -257,7 +257,7 @@ class _GraphsStationState extends State<GraphsStation> {
                             labelPosition: LinearLabelPosition.outside,
                             minimum: 1,
                             maximum: 23,
-                            axisTrackExtent: 24,
+                            axisTrackExtent: 25,
                             animateAxis: true,
                             showTicks: true,
 
@@ -301,10 +301,10 @@ class _GraphsStationState extends State<GraphsStation> {
                                     });
                                   },
                                   position: LinearElementPosition.cross,
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.access_time_filled_outlined,
                                     size: 28,
-                                    color: Colors.black,
+                                    color: Colors.blueGrey.shade800,
                                   ))
                             ],
                           ),
@@ -316,7 +316,7 @@ class _GraphsStationState extends State<GraphsStation> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
                             //border: Border.all(color: Colors.black, width: 1),
-                            color: Colors.blueGrey.shade400,
+                            color: Colors.blueGrey.shade200,
                             //Colors.lightGreen.shade800,
                             boxShadow: [
                               BoxShadow(
@@ -366,7 +366,7 @@ class _GraphsStationState extends State<GraphsStation> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           //border: Border.all(color: Colors.black, width: 1),
-                          color: Colors.blueGrey.shade400,
+                          color: Colors.blueGrey.shade200,
                           //Colors.lightGreen.shade800,
                           boxShadow: [
                             BoxShadow(

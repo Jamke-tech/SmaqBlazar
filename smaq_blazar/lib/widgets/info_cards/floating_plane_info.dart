@@ -1,12 +1,12 @@
-import 'package:SMAQ/classes/Time.dart';
+import 'package:SMAQ/classes/helpers/Time.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:weather_icons/weather_icons.dart';
 
-import '../classes/Model/all_state.dart';
-import '../classes/Model/station_model.dart';
-import '../screens/detail_station.dart';
+import '../../classes/Model/all_state.dart';
+import '../../classes/Model/station_model.dart';
+import '../../screens/detail_station.dart';
 
 class FloatPlaneInfo extends StatefulWidget {
   AllState flight;

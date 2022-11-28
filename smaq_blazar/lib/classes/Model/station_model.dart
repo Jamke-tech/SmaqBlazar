@@ -1,16 +1,11 @@
 import 'dart:math';
-
-import 'package:flutter/material.dart';
-
-import '../pollutants_limits.dart';
+import '../helpers/pollutants_limits.dart';
 import 'data_model.dart';
 
 class StationModel {
   String name;
   String IDStation;
   String Description;
-
-  //String Picture;
   double lat;
   double long;
 
@@ -25,8 +20,6 @@ class StationModel {
       required this.long,
       required this.lastData,
       required this.lastAQI});
-
-
 
   Limits limits = Limits();
 
@@ -43,6 +36,7 @@ class StationModel {
     }
     return -1;
   }
+
   double computeDewPoint(double temp, double humidity) {
     double a = 17.27;
     double b = 237.7;
@@ -59,7 +53,7 @@ class StationModel {
     if (data == "Temp") {
       max = lastData[0].Temperature;
       min = max;
-      while (i < lastData.length) {
+      while (i < lastData.length && DateTime.parse(lastData[i].CreationDate.replaceAll("/", "-")).day == DateTime.parse(lastData[0].CreationDate.replaceAll("/", "-")).day) {
         if (lastData[i].Temperature > max) {
           max = lastData[i].Temperature;
         }
@@ -72,7 +66,7 @@ class StationModel {
     } else {
       max = lastData[0].Humidity;
       min = max;
-      while (i < lastData.length) {
+      while (i < lastData.length && DateTime.parse(lastData[i].CreationDate.replaceAll("/", "-")).day == DateTime.parse(lastData[0].CreationDate.replaceAll("/", "-")).day) {
         if (lastData[i].Humidity > max) {
           max = lastData[i].Humidity;
         }
@@ -83,93 +77,6 @@ class StationModel {
       }
       return [min, max];
     }
-  }
-
-  Color colorAQI(int AqiLevel) {
-    print("Selecting color for: ${AqiLevel}");
-
-    Color colorSelected = Color(0xFF7D0023);
-    if (AqiLevel <= 50) {
-      colorSelected = Colors.lightGreen.shade800;
-    } else if (AqiLevel > 50 && AqiLevel <= 100) {
-      colorSelected = Colors.amber;
-    } else if (AqiLevel > 100 && AqiLevel <= 150) {
-      colorSelected = Colors.orange.shade800;
-    } else if (AqiLevel > 150 && AqiLevel <= 200) {
-      colorSelected = Colors.redAccent.shade700;
-    } else if (AqiLevel > 200 && AqiLevel <= 300) {
-      colorSelected = Colors.pink.shade800;
-    } else {
-      colorSelected = Color(0xFF7D0023);
-    }
-
-    return colorSelected;
-  }
-
-  String textAQI(int AqiLevel) {
-    print("Selecting color for: ${AqiLevel}");
-
-    String Aqitext = "No hi ha perill per la salut.";
-    if (AqiLevel <= 50) {
-      Aqitext = "No hi ha perill per la salut.";
-    } else if (AqiLevel > 50 && AqiLevel <= 100) {
-      Aqitext = "LLeu amenaça per a grups sensibles.";
-    } else if (AqiLevel > 100 && AqiLevel <= 150) {
-      Aqitext = "LLeugeres molèsties al respirar.";
-    } else if (AqiLevel > 150 && AqiLevel <= 200) {
-      Aqitext = "Greus problemes a grups sensibles.";
-    } else if (AqiLevel > 200 && AqiLevel <= 300) {
-      Aqitext = "Pot causar malalties cròniques o afectacions importants.";
-    } else {
-      Aqitext = "L'exposició prolongada pot causar morts prematures.";
-    }
-
-    return Aqitext;
-  }
-
-  String getLevel(int AqiLevel) {
-    print("Selecting color for: ${AqiLevel}");
-
-    String Aqitext = "BO";
-    if (AqiLevel <= 50) {
-      Aqitext = "BO";
-    } else if (AqiLevel > 50 && AqiLevel <= 100) {
-      Aqitext = "MODERAT";
-    } else if (AqiLevel > 100 && AqiLevel <= 150) {
-      Aqitext = "POBRE";
-    } else if (AqiLevel > 150 && AqiLevel <= 200) {
-      Aqitext = "INSALUBRE";
-    } else if (AqiLevel > 200 && AqiLevel <= 300) {
-      Aqitext = "SEVER";
-    } else {
-      Aqitext = "PERILLÓS";
-    }
-
-    return Aqitext;
-  }
-
-  List<dynamic> colorUV(int UVLevel) {
-    print("Selecting color for: ${UVLevel}");
-
-    Color colorSelected = Color(0xFF7D0023);
-    String textSelected = "Nivell baix";
-    if (UVLevel <= 2) {
-      colorSelected = Colors.lightGreen.shade800;
-      textSelected = "Nivell baix";
-    } else if (UVLevel > 2 && UVLevel <= 5) {
-      colorSelected = Colors.amber;
-      textSelected = "Nivell mitjà";
-    } else if (UVLevel > 5 && UVLevel <= 7) {
-      colorSelected = Colors.orange.shade800;
-      textSelected = "Nivell alt";
-    } else if (UVLevel > 7 && UVLevel <= 10) {
-      colorSelected = Colors.redAccent.shade700;
-      textSelected = "Nivell molt alt";
-    } else {
-      colorSelected = Colors.pink.shade800;
-      textSelected = "Nivell extrem";
-    }
-    return [colorSelected, textSelected];
   }
 
   void computeAQI(DateTime time) {
@@ -235,6 +142,7 @@ class StationModel {
       /*DateTime lastDataTime =
           DateTime.parse(lastData[0].CreationDate.replaceAll("/", "-"));
 */
+      print("Substract date: ${time.toString()}");
       DateTime lastDataTime = time;
       //We have to do the average for 1h pollutants
       DateTime actualDataTime = lastDataTime;
@@ -243,7 +151,26 @@ class StationModel {
       double sumSO2 = 0;
       double sumNO2 = 0;
       int vectorPosition = 0;
+      int initialVectorPosition = 0;
 
+
+      //first we have to find the vector position for the date selected which is going to be the first date = or lower than that the lastDataTime
+      bool foundVectorDate = false;
+      while(!foundVectorDate && initialVectorPosition < lastData.length - 1 ){
+        if(DateTime.parse(
+            lastData[initialVectorPosition].CreationDate.replaceAll("/", "-")).isBefore(lastDataTime) || lastData[initialVectorPosition].CreationDate.replaceAll("/", "-") == lastData.toString()  ){
+          foundVectorDate=true;
+        }else{
+        initialVectorPosition++;}
+
+      }
+      print("Vector position selected : $initialVectorPosition and the vector  $vectorPosition");
+      print("Initial counting data:${DateTime.parse(
+          lastData[initialVectorPosition].CreationDate.replaceAll("/", "-"))} ");
+
+      vectorPosition = initialVectorPosition;
+      actualDataTime = DateTime.parse(
+          lastData[initialVectorPosition].CreationDate.replaceAll("/", "-"));
       while (lastDataTime.difference(actualDataTime).inHours < 1 &&
           vectorPosition < lastData.length - 1) {
         //Mentre la diferencia sigui menor a 1h ho afegim a la suma
@@ -261,18 +188,19 @@ class StationModel {
       }
 
       //We compute the 8h average pollutants
-      actualDataTime = lastDataTime;
+      actualDataTime = DateTime.parse(
+          lastData[initialVectorPosition].CreationDate.replaceAll("/", "-"));
       int values8H = 0;
       double sumO38 = 0;
       double sumCO = 0;
 
-      vectorPosition = 0;
+      vectorPosition = initialVectorPosition;
 
       while (lastDataTime.difference(actualDataTime).inHours < 8 &&
           vectorPosition < lastData.length - 1) {
         //Mentre la diferencia sigui menor a 1h ho afegim a la suma
-        print(vectorPosition);
-        print("Length vector:${lastData.length}");
+        //print(vectorPosition);
+        //print("Length vector:${lastData.length}");
 
         sumO38 = sumO38 + lastData[vectorPosition].CxO3;
         sumCO = sumCO + lastData[vectorPosition].CxCO;
@@ -286,13 +214,14 @@ class StationModel {
 
       //We will use the NowCast aproximation where the PM are comuted with 3H average
       //We compute the 3h average pollutants
-      actualDataTime = lastDataTime;
+      actualDataTime = DateTime.parse(
+          lastData[initialVectorPosition].CreationDate.replaceAll("/", "-"));
       int values24H = 0;
       double sumPM25 = 0;
       double sumPM10 = 0;
       double sumSO224 = 0;
 
-      vectorPosition = 0;
+      vectorPosition = initialVectorPosition;
 
       while (lastDataTime.difference(actualDataTime).inHours < 24 &&
           vectorPosition < lastData.length - 1) {
@@ -309,7 +238,6 @@ class StationModel {
         vectorPosition++;
       }
 
-
       List<double> listReturn = [];
 
       double CXO38 = (sumO38 / values8H);
@@ -324,17 +252,16 @@ class StationModel {
       listReturn.add((sumPM10 / values24H));
       listReturn.add((sumCO / values8H));
 
-      double CxSO224 = (sumSO224/values24H);
-      print("SO2 24h : $CxSO224");
-      double CxSO2 = (sumSO2/values1H);
-      print("SO2 1h : $CxSO2");
+      double CxSO224 = (sumSO224 / values24H);
+      print("SO2 24h : ${CxSO224*1000}");
+      double CxSO2 = (sumSO2 / values1H);
+      print("SO2 1h : ${CxSO2*1000}");
 
-      if(CxSO2*1000>185){
+      if (CxSO2 * 1000 > 305) {
         listReturn.add(CxSO224);
-      }else{
+      } else {
         listReturn.add(CxSO2);
       }
-
 
       listReturn.add((sumNO2 / values1H));
 
@@ -347,7 +274,7 @@ class StationModel {
   }
 
   List<int> getAQIListFromCx(List<double> averageCxFromData) {
-    // In order : 03 (8h) / PM25 (3h)  / PM10 (3h) / CO (8h) / SO2 (1h) / NO2 (1h)
+    // In order : 03 (8h or 3h) / PM25 (24h)  / PM10 (24h) / CO (8h) / SO2 (1h or 24h) / NO2 (1h)
     List<int> AQIFinal = []; // In order : 03 / PM25 / PM10 / CO / SO2 / NO2
 
     if (averageCxFromData.isNotEmpty) {
@@ -388,6 +315,4 @@ class StationModel {
       return [];
     }
   }
-
-
 }

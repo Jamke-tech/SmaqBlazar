@@ -88,23 +88,23 @@ class Limits {
   List<double> getLimitsCO(double Cx) {
     //limits in ppm
 
-    List<double> limitsPM10 = [];
+    List<double> limitsCO = [];
     if (Cx <= 4.4) {
-      limitsPM10 = [0, 4.4, 0, 50];
+      limitsCO = [0, 4.4, 0, 50];
     } else if (Cx > 4.4 && Cx <= 9.4) {
-      limitsPM10 = [4.4, 9.4, 51, 100];
+      limitsCO = [4.4, 9.4, 51, 100];
     } else if (Cx > 9.4 && Cx <= 12.4) {
-      limitsPM10 = [9.4, 12.4, 101, 150];
+      limitsCO = [9.4, 12.4, 101, 150];
     } else if (Cx > 12.4 && Cx <= 15.4) {
-      limitsPM10 = [12.4, 15.4, 151, 200];
+      limitsCO = [12.4, 15.4, 151, 200];
     } else if (Cx > 15.4 && Cx <= 30.4) {
-      limitsPM10 = [15.4, 30.4, 201, 300];
+      limitsCO = [15.4, 30.4, 201, 300];
     } else if (Cx > 30.4 && Cx <= 40.4) {
-      limitsPM10 = [30.4, 40.4, 301, 400];
+      limitsCO = [30.4, 40.4, 301, 400];
     } else {
-      limitsPM10 = [40.4, 50.4, 401, 500];
+      limitsCO = [40.4, 50.4, 401, 500];
     }
-    return limitsPM10;
+    return limitsCO;
   }
 
   List<double> getLimitsSO2(double Cx) {

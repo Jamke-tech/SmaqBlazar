@@ -258,9 +258,11 @@ class GraphsGenerator {
 
 
 
-    if(maxRealY<=4){
-      maxRealY=6.0;
-    }
+     if(maxRealY<=3){
+      maxRealY=3.0;
+    }else if(maxRealY<=4){
+       maxRealY=4.0;
+     }
     return maxRealY;
 
   }
@@ -289,8 +291,10 @@ class GraphsGenerator {
   double getInterval(List<FlSpot> listSpots){
     double interval = ((getMaxY(listSpots) -getMinY(listSpots))~/15).toDouble();
     //print("interval: $interval");
-    if(interval<2){
-      interval=2;
+    if(interval<1){
+      interval=1;
+    }else if (interval <2){
+      interval =2;
     }
     //print(interval);
     return interval;

@@ -37,12 +37,12 @@ class StationsManager {
       var headers = {
         'Content-Type': 'application/json',
         'api-key':
-            'MZpxcJNBp1UMJ8JGdnbH5lhR7sAt3CEiREyVlyfEjFkZBD6vuhE960x9TmQD5GHs'
+            endpoints.APIKey
       };
       var request = http.Request(
           'POST',
           Uri.parse(
-              'https://data.mongodb-api.com/app/data-ugjsw/endpoint/data/v1/action/insertOne'));
+              "${endpoints.MongoDB}/insertOne"));
       request.body = json.encode({
         "dataSource": endpoints.MongoDbCluster,
         "database": endpoints.DataBaseName,
@@ -77,12 +77,12 @@ class StationsManager {
       var headers = {
         'Content-Type': 'application/json',
         'api-key':
-            'MZpxcJNBp1UMJ8JGdnbH5lhR7sAt3CEiREyVlyfEjFkZBD6vuhE960x9TmQD5GHs'
+            endpoints.APIKey
       };
       var request = http.Request(
           'POST',
           Uri.parse(
-              'https://data.mongodb-api.com/app/data-ugjsw/endpoint/data/v1/action/find'));
+              "${endpoints.MongoDB}/find"));
       request.body = json.encode({
         "dataSource": endpoints.MongoDbCluster,
         "database": endpoints.DataBaseName,

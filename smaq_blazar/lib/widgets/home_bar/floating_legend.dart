@@ -1,3 +1,4 @@
+import 'package:SMAQ/classes/helpers/design_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -25,11 +26,9 @@ class _FloatLegendState extends State<FloatLegend> {
     Color(0xff0b1e5e),
 
   ];
+  DesignHelper design = DesignHelper();
   @override
   Widget build(BuildContext context) {
-
-
-
 
     return Container(
         decoration: BoxDecoration(
@@ -118,7 +117,7 @@ class _FloatLegendState extends State<FloatLegend> {
                           height: 20,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.lightGreen.shade800,
+                            color: design.colorAQI(10),
                             border: Border.all(width: 1, color: Colors.black),
                           ),
                         ),
@@ -131,12 +130,12 @@ class _FloatLegendState extends State<FloatLegend> {
                                 Text("BO:  0 - 50 ",
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.lightGreen.shade800,
+                                      color: design.colorAQI(10),
                                     )),
-                                const Padding(
-                                  padding: EdgeInsets.only(top:4),
-                                  child: Text( "No hi ha perill per la salut.",
-                                      style: TextStyle(
+                                Padding(
+                                  padding: const EdgeInsets.only(top:4),
+                                  child: Text( design.textAQI(10),
+                                      style: const TextStyle(
                                         fontSize: 10,
                                         color: Colors.white,
                                       )),
@@ -157,7 +156,7 @@ class _FloatLegendState extends State<FloatLegend> {
                           height: 20,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.amber,
+                            color: design.colorAQI(60),
                             border: Border.all(width: 1, color: Colors.black),
                           ),
                         ),
@@ -166,17 +165,17 @@ class _FloatLegendState extends State<FloatLegend> {
                             padding: const EdgeInsets.only(left: 8),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text("MODERAT: 51 - 100",
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.amber,
+                                      color: design.colorAQI(60),
                                     )),
                                 Padding(
-                                  padding: EdgeInsets.only(top:4),
+                                  padding: const EdgeInsets.only(top:4),
                                   child: Text(
-                                      "LLeu amenaça per a grups sensibles.",
-                                      style: TextStyle(
+                                      design.textAQI(60),
+                                      style: const TextStyle(
                                         fontSize: 10,
                                         color: Colors.white,
                                       )),
@@ -206,7 +205,7 @@ class _FloatLegendState extends State<FloatLegend> {
                             height: 20,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.orange.shade800,
+                              color: design.colorAQI(110),
                               border: Border.all(width: 1, color: Colors.black),
                             ),
                           ),
@@ -219,12 +218,12 @@ class _FloatLegendState extends State<FloatLegend> {
                                   Text("POBRE:  101 - 150 ",
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Colors.orange.shade800,
+                                        color: design.colorAQI(110),
                                       )),
-                                  const Padding(
-                                    padding: EdgeInsets.only(top:4),
-                                    child: Text( "LLeugeres molèsties al respirar.",
-                                        style: TextStyle(
+                                  Padding(
+                                    padding: const EdgeInsets.only(top:4),
+                                    child: Text( design.textAQI(110),
+                                        style: const TextStyle(
                                           fontSize: 10,
                                           color: Colors.white,
                                         )),
@@ -245,7 +244,7 @@ class _FloatLegendState extends State<FloatLegend> {
                             height: 20,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.redAccent.shade700,
+                              color: design.colorAQI(160),
                               border: Border.all(width: 1, color: Colors.black),
                             ),
                           ),
@@ -258,13 +257,13 @@ class _FloatLegendState extends State<FloatLegend> {
                                   Text("INSALUBRE: 151 - 200",
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Colors.redAccent.shade700,
+                                        color: design.colorAQI(160),
                                       )),
-                                  const Padding(
-                                    padding: EdgeInsets.only(top:4),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top:4),
                                     child: Text(
-                                        "Greus problemes a grups sensibles.",
-                                        style: TextStyle(
+                                        design.textAQI(160),
+                                        style: const TextStyle(
                                           fontSize: 10,
                                           color: Colors.white,
                                         )),
@@ -295,7 +294,7 @@ class _FloatLegendState extends State<FloatLegend> {
                             height: 20,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Colors.pink.shade800,
+                              color: design.colorAQI(250),
                               border: Border.all(width: 1, color: Colors.black),
                             ),
                           ),
@@ -308,12 +307,12 @@ class _FloatLegendState extends State<FloatLegend> {
                                   Text("SEVER:  201 - 300 ",
                                       style: TextStyle(
                                         fontSize: 15,
-                                        color: Colors.pink.shade800,
+                                        color: design.colorAQI(250),
                                       )),
-                                  const Padding(
-                                    padding: EdgeInsets.only(top:4),
-                                    child: Text( "Pot causar malalties cròniques o afectacions importants.",
-                                        style: TextStyle(
+                                 Padding(
+                                    padding: const EdgeInsets.only(top:4),
+                                    child: Text( design.textAQI(260),
+                                        style: const TextStyle(
                                           fontSize: 10,
                                           color: Colors.white,
                                         )),
@@ -334,7 +333,7 @@ class _FloatLegendState extends State<FloatLegend> {
                             height: 20,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Color(0xFF7D0023),
+                              color: design.colorAQI(400),
                               border: Border.all(width: 1, color: Colors.black),
                             ),
                           ),
@@ -343,17 +342,17 @@ class _FloatLegendState extends State<FloatLegend> {
                               padding: const EdgeInsets.only(left: 8),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
+                                children:  [
                                   Text("PERILLÓS: 300+",
                                       style: TextStyle(
                                         fontSize: 15,
-                                        color: Color(0xFF7D0023),
+                                        color: design.colorAQI(400),
                                       )),
                                   Padding(
-                                    padding: EdgeInsets.only(top:4),
+                                    padding: const EdgeInsets.only(top:4),
                                     child: Text(
-                                        "L'exposició prolongada pot causar morts prematures.",
-                                        style: TextStyle(
+                                        design.textAQI(400),
+                                        style: const TextStyle(
                                           fontSize: 10,
                                           color: Colors.white,
                                         )),

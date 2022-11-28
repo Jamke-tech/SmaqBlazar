@@ -10,7 +10,7 @@ class Endpoints {
   }
 
   //Valores de las API points
-  final String MongoDB = 'https://data.mongodb-api.com/app/data-ugjsw/endpoint/data/v1/action'; // per simulació de Android STUDIO
+  final String MongoDB = 'https://data.mongodb-api.com/app/data-ugjsw/endpoint/data/v1/action';
   final String APIKey = "MZpxcJNBp1UMJ8JGdnbH5lhR7sAt3CEiREyVlyfEjFkZBD6vuhE960x9TmQD5GHs";
   final String MongoDbCluster= "Cluster0";
   final String DataBaseName= "SmaqBlazar";
