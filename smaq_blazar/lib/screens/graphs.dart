@@ -145,6 +145,23 @@ class _GraphsStationState extends State<GraphsStation> {
     double verticalInterval=(listSpots.length)/15;
 
     return Scaffold(
+      floatingActionButton: Align(
+        alignment: Alignment.topRight,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 120),
+          child: FloatingActionButton(
+            backgroundColor: Colors.blueGrey.shade200.withOpacity(0.8),
+
+            onPressed: () async { await generatorGraphs.generateExcelfromData(); },
+            child: const Icon(
+              Icons.save,
+            color: Color(0xff00877F),),
+
+
+
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Stack(
           children: [

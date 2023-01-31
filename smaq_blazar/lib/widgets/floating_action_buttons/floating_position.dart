@@ -26,7 +26,7 @@ class _FloatPositionState extends State<FloatPosition> {
   Widget build(BuildContext context) {
     return FloatingActionButton.small(
       heroTag: widget.isPlane? "planeBTN" : widget.isFilter? "filterBTN" : "positionBTN",
-      backgroundColor: Colors.blueGrey.shade200,
+      backgroundColor: Colors.blueGrey.shade200.withOpacity(0.8),
       hoverColor: const Color(0xff00877F),
       splashColor: const Color(0xff00877F),
       onPressed: widget.functionWhenClicked,

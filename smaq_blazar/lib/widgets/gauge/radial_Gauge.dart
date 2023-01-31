@@ -27,7 +27,7 @@ class _RadialGaugeAQIState extends State<RadialGaugeAQI> {
     return SfRadialGauge(
       title:  GaugeTitle(
           alignment: GaugeAlignment.near,
-          text: "Nivell de contaminació actual:",
+         text: "Nivell de contaminació actual:",
           textStyle: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.bold,
